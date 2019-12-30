@@ -62,6 +62,12 @@ if($language == "es") {
     $non = "No";
 
     $erreur = "CONTRASEÑA INCORRECTA";
+
+    $allerIci = "ELEGIR ESTE DESTINO";
+    $prochainSejour = "PRÓXIMA ESTADÍA";
+    $dans = "en";
+    $jour = "día";
+    $voirReserve = "VER RESERVA";
 }
 
 if($language == "fr") {
@@ -126,6 +132,12 @@ if($language == "fr") {
     $non = "Non";
 
     $erreur = "MOT-DE-PASSE INCORRECT";
+
+    $allerIci = "CHOISIR CETTE DESTINATION";
+    $prochainSejour = "PROCHAIN SÉJOUR";
+    $dans = "dans";
+    $jour = "jour";
+    $voirReserve = "VOIR RÉSERVE";
 }
 
 if($language == "en") {
@@ -190,6 +202,12 @@ if($language == "en") {
     $non = "No";
 
     $erreur = "INCORRECT PASSWORD";
+
+    $allerIci = "PICK THIS DESTINATION";
+    $prochainSejour = "UPCOMING STAY";
+    $dans = "in";
+    $jour = "day";
+    $voirReserve = "CHECK BOOKING";
 }
 
 ?>

@@ -22,6 +22,7 @@ if(Auth::check()) {
     // SELECTOR DE TEMA
 
     // POR DEFECTO
+    $theme = "claro";
     $carpeta = "/img/light_mode";
     $css = "/css/light_mode.css";
     $selectedThemeClaro = "selected";
@@ -35,12 +36,13 @@ if(Auth::check()) {
     };
 
     if(isset($_COOKIE["theme"])) {
-        if($_COOKIE["theme"] == "oscuro") {
+        $theme = $_COOKIE["theme"];
+        if($theme == "oscuro") {
             $selectedThemeClaro = "";
             $selectedThemeOscuro = "selected";
             $carpeta = "/img/dark_mode";
             $css = "/css/dark_mode.css";
-        } else if ($_COOKIE["theme"] == "claro") {
+        } else if ($theme == "claro") {
             $selectedThemeClaro = "selected";
             $selectedThemeOscuro = "";
             $carpeta = "/img/light_mode";
@@ -92,14 +94,17 @@ if(Auth::check()) {
         $avatar = '/storage/'.Auth::user()->avatar;
     }
 
-    // PROPIEDADES, FAVORITOS, FOTOS
+    // TABLAS
+
+    $currentTime = time();
 
     $users = User::all()->toArray();
     $properties = Property::all()->toArray();
     $myFavorites = Favorite::where('user_id', '=', $userID)->where('favorite', '=', 1)->get('property_id')->toArray();
     $myBookings = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->get()->toArray();
+    $myNextBooking = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->where('date_in', '>', $currentTime)->orderBy('date_in', 'ASC')->first();
+    if(!empty($myNextBooking)) {$myNextBooking->toArray();}
     $pictures = Photo::all()->toArray();
-
 ?>
 
 <!DOCTYPE html>
@@ -151,7 +156,7 @@ if(Auth::check()) {
 
         <!-- CONTENEDOR DEL MAPA -->
 
-        <section class="mapa">
+        <section class="mapa" style="opacity: 0.5;">
         </section>
 
         <!------------------------------------------ BUSQUEDA ---------------------------------------------->
@@ -167,10 +172,23 @@ if(Auth::check()) {
             </nav>
         </form>
 
-        <footer>
-          
-        </footer>
+        <!--------------------------------------- TABLA DE INICIO ------------------------------------------->
 
+        <section class="downPanel">
+            <footer>
+                <div class="allerIci"><?=$allerIci?></div>
+            </footer>
+
+            @if (Auth::check())
+            @if (!empty($myNextBooking))
+            <div id="downTile1" class="downTile"><div><?=$voirReserve?></div><p id="upcomingStayTitle"><?=$prochainSejour?></p><p id="upcomingStayDate"><?=$dans?> <span id="upcomingStayDays"></span> <?=$jour?>(s)</p></div>
+            @endif
+            <div id="downTile2" class="downTile"></div>
+            <div id="downTile3" class="downTile"></div>
+            @endif
+
+        </section>
+        
         <!-------------------------------- RESULTADOS (SE GENERAN EN JS) ------------------------------------>
 
         <section class="seccionPrincipalArticulos">
@@ -348,12 +366,11 @@ if(Auth::check()) {
                     <select name="location">
                         <option value="" selected disabled hidden>Elegí la ubicación</option>
                         <option value="buenos aires">Buenos Aires</option>
-                        <option value="tokio">Tokio</option>
-                        <option value="paris">Paris</option>
-                        <option value="rio de janeiro">Rio de Janeiro</option>
-                        <option value="barcelona">Barcelona</option>
-                        <option value="sucre">Sucre</option>
-                        <option value="berlin">Berlin</option>
+                        <option value="ushuaia">Ushuaia</option>
+                        <option value="bariloche">Bariloche</option>
+                        <option value="mendoza">Mendoza</option>
+                        <option value="iguazu">Iguazu</option>
+                        <option value="el calafate">El Calafate</option>
                     </select>
 
                     <!-- <label for="foto2" class="file formLogin"></label>
@@ -413,12 +430,13 @@ if(Auth::check()) {
     var properties = <?php echo json_encode($properties) ?>;
     var myFavorites = <?php echo json_encode($myFavorites) ?>;
     var myBookings = <?php echo json_encode($myBookings) ?>;
+    var myNextBooking = <?php echo json_encode($myNextBooking) ?>;
     var propertyPictures = <?php echo json_encode($pictures) ?>;
     var country = "<?php echo $country; ?>";
     var language = "<?php echo $language ?>";
     var multiplier = <?php echo $multiplier ?>;
     var symbol = "<?php echo $symbol ?>";
-    var theme = "<?php echo $_COOKIE["theme"] ?>";
+    var theme = "<?php echo $theme ?>";
     var userID = <?php echo $userID ?>;
     console.log("Usuarios:");
     console.log(users);
@@ -428,6 +446,8 @@ if(Auth::check()) {
     console.log(myFavorites);
     console.log("Reservas:");
     console.log(myBookings);
+    console.log("Próxima reserva:");
+    console.log(myNextBooking);
     console.log("Fotos de propiedades:");
     console.log(propertyPictures);
     console.log("País:");

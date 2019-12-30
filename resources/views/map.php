@@ -7,7 +7,7 @@
 
     // UBICACIÓN ALEATORIA, COMENTARIO Y FOTOS
 
-    var num = Math.floor((Math.random() * 10) + 1);
+    var num = Math.floor(((Math.random() * 10) + 2)/2);
 
     if(num == 1) {lon = -67; lat = -55;} // Tierra del Fuego
     if(num == 2) {lon = -71.308525; lat = -41.134258;} // Bariloche
@@ -48,7 +48,7 @@
       if(num == 1) {presse = '<p>"Known as a banishment place before turning worldwide famous, <b>Ushuaia (Tierra del Fuego)</b> reminds us in each and every one of its corners that we are in the end of the World"<br><br><em>Le Monde Diplomatique</em></p>';}
       if(num == 2) {presse = 'Bariloche'}
       if(num == 3) {presse = 'Mendoza'}
-      if(num == 4) {presse = 'Posadas'}
+      if(num == 4) {presse = 'Iguazu'}
       if(num == 5) {presse = 'Calafate'}
       if(num == 6) {presse = 'Tucuman'}
       if(num == 7) {presse = 'Buenos Aires'}
@@ -56,8 +56,14 @@
       if(num == 9) {presse = 'Santa Fe y Paraná'}
       if(num == 10) {presse = 'Mar del Plata'}
     }
+    if(num == 1) {$(".allerIci").attr("id", "ushuaia"); photos = '<div class="example_pic" style="background-image: url(\'/storage/ushuaia.jpg\');"></div>';}
+    if(num == 2) {$(".allerIci").attr("id", "bariloche"); photos = '<div class="example_pic" style="background-image: url(\'/storage/bariloche.jpg\');"></div>';}
+    if(num == 3) {$(".allerIci").attr("id", "mendoza"); photos = '<div class="example_pic" style="background-image: url(\'/storage/mendoza.jpg\');"></div>';}
+    if(num == 4) {$(".allerIci").attr("id", "iguazu"); photos = '<div class="example_pic" style="background-image: url(\'/storage/iguazu.jpg\');"></div>';}
+    if(num == 5) {$(".allerIci").attr("id", "el calafate"); photos = '<div class="example_pic" style="background-image: url(\'/storage/calafate.jpg\');"></div>';}
 
-    $("footer").html(presse);
+    $("footer").append(photos);
+    $(".example_pic").html(presse);
 
     // MAPA
 
@@ -120,33 +126,29 @@
 
         console.log($busqueda);
 
-        if($busqueda == "paris") {
-        var lon = 2.3488;
-        var lat = 48.8534;
+        if($busqueda == "ushuaia") {
+        var lon = -68.3;
+        var lat = -54.8;
         }
-        if($busqueda == "barcelona") {
-        var lon = 2.15899;
-        var lat = 41.38879;
+        if($busqueda == "bariloche") {
+        var lon = -71.308525;
+        var lat = -41.134258;
         }
-        if($busqueda == "tokio") {
-        var lon = 139.73171;
-        var lat = 35.6895;
+        if($busqueda == "mendoza") {
+        var lon = -68.838844;
+        var lat = -32.888355;
         }
         if($busqueda == "buenos aires") {
         var lon = -58.37723;
         var lat = -34.61315;
         }
-        if($busqueda == "rio de janeiro") {
-        var lon = -43.2075;
-        var lat = -22.90278;
+        if($busqueda == "iguazu") {
+        var lon = -54.5736;
+        var lat = -25.5991;
         }
-        if($busqueda == "sucre") {
-        var lon = -65.26274;
-        var lat = -19.03332;
-        }
-        if($busqueda == "berlin") {
-        var lon = 13.41053;
-        var lat = 52.52437;
+        if($busqueda == "el calafate") {
+        var lon = -72.27682;
+        var lat = -50.34075;
         }
 
         worldFly(lon, lat);

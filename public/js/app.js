@@ -43,6 +43,8 @@ if(language == "es") {
     var mail_incorrect = "Este mail no está registrado";
     var mdp_incorrect = "La contraseña es incorrecta";
 
+    var pasDeReserve = "No tenes reservas";
+
 } else if (language == "fr") {
     var personnes = "personne(s)" ;
     var jour = "jour";
@@ -85,6 +87,8 @@ if(language == "es") {
     var mail_incorrect = "Cette adresse mail n'est pas enregistrée";
     var mdp_incorrect = "Le mot-de-passe est incorrect";
 
+    var pasDeReserve = "Vous n'avez pas de réservations";
+
 } else if (language == "en") {
     var personnes = "people" ;
     var jour = "day";
@@ -126,6 +130,8 @@ if(language == "es") {
     var pseudo_meme = "This name is already taken";
     var mail_incorrect = "This mail adress has not been registered yet";
     var mdp_incorrect = "The password is incorrect";
+
+    var pasDeReserve = "You don't have any bookings";
 }
 
 $(document).ready(function() {
@@ -261,7 +267,23 @@ $(function(){
     })
 });
 
+var triggered = 0;
+
+$(document).on("click", "#checkBooking", function() {
+    var booking_id = $(this).attr("booking-id");
+    $(".favoritos").trigger("click");
+    if(triggered < 1) {
+        $("#booking"+booking_id).delay(250).trigger("click");
+        triggered++;
+    }
+});
+
 var searchedProperties = {};
+
+$(document).on("click", ".allerIci", function() {
+    $(".buscar").val($(this).attr('id').toUpperCase());
+    $("#formBuscar").submit();
+});
 
 function searchAgain() {
     var alreadySearched = 1;
@@ -274,18 +296,24 @@ function searchAgain() {
 $('#formBuscar').submit(function search(event){
     event.preventDefault();
     if($(".buscar").val() == "") {return;}
-    $("footer").animate({opacity:"0"},);
+    $(".downPanel").animate({opacity:"0"},);
     $('.seccionPrincipalArticulos').show();
     $('.seccionPrincipalArticulos').children('h2').remove();
     $(".buscar").animate({width:"50px"},500);
     $(".filtros").css("display","inline-block");
     $(".filtros").show();
-    $busqueda = $('#buscar').val().toLowerCase(); 
+    $busqueda = $('#buscar').val().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
     var sameLocationProperties = [];
     
     properties.forEach(function(property){
         if(property.location == $busqueda) {
-            $('.seccionPrincipalArticulos').prepend('<div id="'+property.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+property.id+'" data-picture="'+property.main_picture+'" class="articulosPrincipales '+multiplier*property.price+'price '+property.area+'area '+property.beds+'beds '+property.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+property.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+property.title+'</p><p class="infoCompleta" style="opacity: 0">'+property.area+' m<sup>2</sup> | '+property.beds+' '+personnes+' | <strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong><span id="bookButton">'+reserver+'</span></p></article></div>')
+            users.forEach(function(user){
+                if(user.id == property.owner) {
+                    owner_avatar = user.avatar;
+                    owner_name = user.name;
+                }
+            });
+            $('.seccionPrincipalArticulos').prepend('<div id="'+property.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+property.id+'" data-picture="'+property.main_picture+'" class="articulosPrincipales '+multiplier*property.price+'price '+property.area+'area '+property.beds+'beds '+property.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+property.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+property.title+'</p><p class="infoCompleta" style="opacity: 0">'+property.area+' m<sup>2</sup> | '+property.beds+' '+personnes+' | <strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p></article></div>')
             sameLocationProperties.push(property);
         }
     });
@@ -318,7 +346,7 @@ function filter() {
             k++;
             sameLocationProperties.forEach(function(filteredProperty) {
                 if(filteredProperty.area >= area && filteredProperty.price <= price && (beds == "N" || beds == filteredProperty.beds)) {
-                    $('.seccionPrincipalArticulos').prepend('<div id="'+filteredProperty.id+'" class="articleContainer" style="margin: 0; padding: 0; border: none; background-color: rgba(125,125,125,0.8);"><article id="'+filteredProperty.id+'" data-picture="'+filteredProperty.main_picture+'" class="articulosPrincipales '+multiplier*filteredProperty.price+'price '+filteredProperty.area+'area '+filteredProperty.beds+'beds '+filteredProperty.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+filteredProperty.main_picture+'\'); height: 200px; border: none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+filteredProperty.title+'</p><p class="infoCompleta" style="opacity: 0">'+filteredProperty.area+' m<sup>2</sup> | '+filteredProperty.beds+' '+personnes+' | <strong>'+Math.round(multiplier*filteredProperty.price)+' '+symbol+'/'+jour+'</strong><span id="bookButton">'+reserver+'</span></p></article></div>')
+                    $('.seccionPrincipalArticulos').prepend('<div id="'+filteredProperty.id+'" class="articleContainer" style="margin: 0; padding: 0; border: none; background-color: rgba(125,125,125,0.8);"><article id="'+filteredProperty.id+'" data-picture="'+filteredProperty.main_picture+'" class="articulosPrincipales '+multiplier*filteredProperty.price+'price '+filteredProperty.area+'area '+filteredProperty.beds+'beds '+filteredProperty.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+filteredProperty.main_picture+'\'); height: 200px; border: none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+filteredProperty.title+'</p><p class="infoCompleta" style="opacity: 0">'+filteredProperty.area+' m<sup>2</sup> | '+filteredProperty.beds+' '+personnes+' | <strong>'+Math.round(multiplier*filteredProperty.price)+' '+symbol+'/'+jour+'</strong><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p></article></div>')
                     i++;
                     e++;
                 }
@@ -475,6 +503,7 @@ $(document).on("click",".articulosPrincipales", function (event) {
                 $(".infoCompleta", this).animate({opacity: '1'});
                 $(".favorito", this).css("opacity", "1");
                 $(".flecha", this).css("display", "inline-block");
+                $(".ownerName", this).fadeIn();
                 break;
 
             case 2:
@@ -483,6 +512,7 @@ $(document).on("click",".articulosPrincipales", function (event) {
                 $(".infoCompleta", this).animate({opacity: '0'});
                 $(".favorito", this).css("opacity", "0");
                 $(".flecha", this).css("display", "none");
+                $(".ownerName", this).fadeOut();
                 break;
         }
         iteration++;
@@ -508,14 +538,27 @@ properties.forEach(function(property) {
         if(myBooking.property_id == property.id) {
             var days = Math.round((myBooking.date_out-myBooking.date_in)/60/60/24);
             var date = new Date(myBooking.date_in*1000).toLocaleDateString();
-            $("#myBookings").prepend('<article class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
+            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
             myFavoritesIndex++;
+            if(myNextBooking != null) {
+                if(myBooking.property_id == myNextBooking.property_id) {
+                    $("#downTile1").addClass("nextBookingOk");
+                    $("div", "#downTile1").attr("id", "checkBooking");
+                    $("div", "#downTile1").attr("booking-id", myBooking.id);
+                    var days2 = Math.round((myBooking.date_in-($.now()/1000))/60/60/24);
+                    $("#downTile1").css('background-image','url("/storage/'+property.main_picture+'")');
+                    $("#upcomingStayDays").html(days2);
+                }
+            }
         }
-    })
-    
+    });
 });
-if (myPropertiesIndex == 0) {$("#myProperties").prepend(publie)}
-if (myFavoritesIndex == 0) {$("#myFavorites").prepend(favoris)}
+if (myPropertiesIndex == 0) {$("#myProperties").prepend(publie);}
+if (myFavoritesIndex == 0) {$("#myFavorites").prepend(favoris);}
+if(myNextBooking == null) {
+    $("#downTile2").css("left", "525px");
+    $("#downTile3").css("left", "525px");
+}
 
 function cuadrado (){
     var width = $('.articulosFavoritos').outerWidth();
@@ -576,6 +619,7 @@ $(function(){
                 $("p", this).animate({opacity: 1});
                 $("span", this).css("display", "inline-block");
                 $(this).removeClass('favOpac');
+                triggered = 1;
                 break;
 
             case 2:
@@ -592,6 +636,7 @@ $(function(){
                 $("p", this).delay(500).animate({opacity: 0});
                 $("span", this).css("display", "none");
                 $(this).addClass('favOpac');
+                triggered = 0;
                 break;
         }
         iteration++;
@@ -665,7 +710,7 @@ $(document).on("click",".qs-squares", function () {
     var range = date2 - date1;
     if(!isNaN(range)) {
         $('#firstDate').css('opacity', 1);
-        $('#firstDate').html(Math.round(booked_property.price*multiplier*range)+' '+symbol);
+        $('#firstDate').html(Math.round(booked_property.price*multiplier*range)+' '+symbol).digits();
         $("#bookPropForm form").append("<input name='price' value='"+booked_property.price*range+"' style='display:none'></input>");
     }
 });
@@ -787,3 +832,8 @@ function countrySelect() {
     });
 }
     
+$.fn.digits = function(){ 
+    return this.each(function(){ 
+        $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") ); 
+    })
+}

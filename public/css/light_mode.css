@@ -14,6 +14,15 @@ form input,select {
 footer{
   color: black;
 }
+.downTile, .downTile p {
+    background: rgba(255, 255, 255, 0.8);
+}
+.example_pic p, .allerIci{
+    background-color: rgba(255, 255, 255, 0.8);
+}
+#checkBooking {
+    background-color: rgba(255, 255, 255, 0.8);
+}
 form input.buscar {
     background: rgba(255, 255, 255, 0.5);
     border-left: solid black 3px;
@@ -40,6 +49,9 @@ nav.filtros{
 }
 .articulosPrincipales p {
     background-color: rgba(255, 255, 255, 0.75);
+}
+.ownerName {
+    background: rgba(255, 255, 255, 0.8);
 }
 .panelFavoritos {
     background:rgba(179,181,167,1);

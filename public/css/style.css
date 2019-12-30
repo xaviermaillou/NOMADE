@@ -107,17 +107,94 @@ form .aceptar {
 }
 
 footer{
-  font-family: monospace;
-  width: 95%;
-  height: 100px;
-  position: fixed;
-  top: 85%;
-  z-index: 11;
-  left: 2%;
-  animation-name: opac;
-  animation-duration: 4s;
-
+    height: 250px;
+    width: 95%;
+    position: fixed;
+    bottom: 20px;
+    z-index: 11;
+    left: 20px;
+    animation-name: opac;
+    animation-duration: 4s;
 }
+.example_pic {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+.example_pic p{
+    font-family: monospace;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    padding: 10px;
+    transition: opacity 0.5s;
+}
+.allerIci {
+    height: 100%;
+    padding-top: 105px;
+    font-size: 20px;
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.downTile {
+    background-size: cover !important;
+    background-position: center !important;
+    box-sizing: border-box;
+    position: fixed;
+    opacity: 1;
+    animation-name: opac;
+    animation-duration: 4s;
+}
+.downTile p {
+    box-sizing: border-box;
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding-top: 5px;
+}
+.downTile p#upcomingStayDate {
+    padding: 0;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+.nextBookingOk p{
+    transition: opacity 0.5s;
+}
+#checkBooking {
+    font-size: 20px;
+    position: absolute;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding-top: 105px;
+    transition: opacity 0.5s;
+}
+#downTile1 {
+    left: 525px;
+    width: 250px;
+    height: 250px;
+    bottom: 20px;
+}
+#downTile2 {
+    left: 780px;
+    width: 122.5px;
+    height: 122.5px;
+    bottom: 20px;
+}
+#downTile3 {
+    left: 780px;
+    width: 122.5px;
+    height: 122.5px;
+    bottom: 147.5px;
+}
+
 nav.encabezado {
     position: fixed;
     right: 20px;
@@ -143,7 +220,7 @@ nav.encabezado div img {
 form#formBuscar {
     position: fixed;
     width: 50%;
-    top: 60px;
+    top: 75px;
     box-sizing: border-box;
     z-index: 10000;
     height: 60px;
@@ -317,6 +394,30 @@ section.mapa {
     width: 100%;
     opacity: 0;
     bottom: 0;
+}
+.profile {
+    height: 30px;
+    width: 30px;
+    border-radius: 15px;
+    position: absolute;
+    left: 10px;
+    top: -442px;
+    z-index: 9;
+}
+.ownerName {
+    box-sizing: border-box;
+    overflow: hidden;
+    font-size: 20px;
+    text-transform: uppercase;
+    position: absolute;
+    left: 25px;
+    top: -442px;
+    padding-left: 25px;
+    padding-right: 15px;
+    height: 30px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    display: none;
 }
 
 .retorno {
@@ -547,11 +648,15 @@ section.formularioEliminar input {
 
 .qs-datepicker-container {
     font-size: 1.192rem !important;
+    height: 250px;
     font-family: 'Titillium Web' !important;
     border-radius: 0 !important;
     border: none !important;
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
+}
+.qs-datepicker-container:first-of-type {
+    border-right: 4px solid lightgrey !important;
 }
 .qs-datepicker .qs-controls {
     background: none !important;
@@ -621,6 +726,24 @@ section.formularioEliminar input {
     }
     .articulosPrincipales:hover > p.infoPrevia {
         right: 0;
+    }
+    footer:hover {
+        cursor: pointer;
+    }
+    footer:hover > .example_pic p {
+        opacity: 0;
+    }
+    footer:hover > .allerIci {
+        opacity: 1;
+    }
+    .nextBookingOk:hover > p {
+        opacity: 0;
+    }
+    .nextBookingOk:hover > #checkBooking {
+        opacity: 1;
+    }
+    .nextBookingOk:hover {
+        cursor: pointer;
     }
 
     .retorno:hover {
