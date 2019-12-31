@@ -167,6 +167,7 @@ footer{
     transition: opacity 0.5s;
 }
 #checkBooking {
+    box-sizing: border-box;
     font-size: 20px;
     position: absolute;
     opacity: 0;
@@ -329,16 +330,38 @@ section.mapa {
 .pestana:hover {
     cursor: pointer;
 }
-.closeTab {
+.closeTab, .editBookingTab, .editPropTab, .closeFav, .messageIcon {
     margin-left: 5px;
     display: inline-block;
     font-size: 35px;
     line-height: 20px;
     transform: translateY(2px);
 }
-.closeTab:hover {
+.messageIcon {
+    margin-left: 10px;
+}
+.editBookingTab, .editPropTab, .messageIcon {
+    font-size: 30px;
+    margin-top: 5px;
+}
+.closeTab:hover, .editBookingTab:hover, .editPropTab:hover, .messageIcon:hover, .closeFav:hover {
     opacity: 0.5;
     cursor: pointer;
+}
+#cancelBooking input{
+    font-size: 18px;
+}
+.editBookingTab, .editPropTab, .closeFav, .messageIcon {
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 15px;
+}
+.closeFav {
+    line-height: 25px;
+    margin-top: 5px;
 }
 
 .articulosPrincipales {
@@ -380,20 +403,20 @@ section.mapa {
     box-sizing: border-box;
     position: absolute;
     padding: 10px;
-    margin: 0;
 }
 .infoPrevia {
     position: relative;
     z-index: 30;
     transition: right 0.5s;
-    width: 30%;
-    height: 100%;
     right: -100%;
+    margin: 10px;
+    text-transform: uppercase;
 }
 .infoCompleta {
     width: 100%;
     opacity: 0;
     bottom: 0;
+    margin: 0;
 }
 .profile {
     height: 30px;
@@ -464,7 +487,7 @@ section.mapa {
     display: none;
     position: relative;
     z-index: 30;
-    margin-top: 70%;
+    margin-top: 60%;
     padding-top: 5px;
     text-align: center;
     width: 100%;
@@ -795,7 +818,7 @@ section.formularioEliminar input {
     #bookButton:hover {
         background-color:rgba(104,128,131,0.3);
     }
-    #bookPropForm section {
+    #bookPropForm section, #bookEditForm section {
         width: 600px;
     }
 }

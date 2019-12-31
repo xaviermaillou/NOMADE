@@ -388,20 +388,25 @@ if(Auth::check()) {
         </section>
 
 
-        <!------------------------------------RESERVAR PROPIEDAD--------------------------------------->
+        <!----------------------------RESERVAR PROPIEDAD Y EDITAR RESERVA------------------------------->
 
         <section class="agregarDepto" id="bookPropForm">
             <section class="formularioAgregar">
                 <img src="<?=$carpeta?>/cruz.png" class="cerrar" alt="">
-                <h1 style="margin-left: 10px;"><?=$reserverProp?></h1>
-                <form action="/bookProperty" method="POST">
+                <h1 class="opt1" style="margin-left: 10px; display: none;"><?=$reserverProp?></h1>
+                <h1 class="opt2" style="margin-left: 10px; display: none;"><?=$editerReserv?></h1>
+                <form action="/bookProperty" method="POST" id="editBooking">
                 @csrf 
                     <label for="dateIn" class="file formLogin" style="display: inline-block; border: none; width: 298px; margin-bottom: 0; text-indent: 10px;"><?=$depuis?></label>
                     <label for="dateOut" class="file formLogin" style="display: inline-block; border: none; width: 298px; margin-bottom: 0; text-indent: 10px;"><?=$jusqua?></label>
                     <input style="display: inline-block; color:transparent; height: 0px;" type="text" name="dateIn" id="dateIn" readonly>
                     <input style="display: inline-block; color:transparent; height: 0px;" type="text" name="dateOut" id="dateOut" readonly>
-                    <p id='firstDate' style='margin-left: 10px; margin-top: 230px; margin-bottom: 10px; opacity: 0; font-size: 20px; font-weight: bolder'>PRECIO</p>
-                    <input type="submit" value="<?=$reserver?>" class="aceptar" style="margin-left: 10px;">
+                    <p id='firstDate' style='margin-left: 10px; margin-top: 260px; margin-bottom: 10px; opacity: 0; font-size: 20px; font-weight: bolder'>PRECIO</p>
+                    <input type="submit" value="<?=$reserver?>" class="aceptar" style="margin-left: 10px; width: 120px;">
+                </form>
+                <form action="/removeBooking" style="display: none;" method="POST" id="cancelBooking">
+                @csrf
+                <input type="submit" value="<?=$supprimer?>" class="aceptar" style="margin-left: 10px; width: 150px;">
                 </form>
             </section>
         </section>

@@ -53,11 +53,14 @@ nav.filtros{
 .ownerName {
     background: rgba(255, 255, 255, 0.8);
 }
-.panelFavoritos {
-    background:rgba(179,181,167,1);
-}
 .infoFavoritos {
     background-color: rgba(255, 255, 255, 0.75);
+}
+.editBookingTab, .editPropTab, .closeFav, .messageIcon {
+    background: rgba(255, 255, 255, 0.8);
+}
+.panelFavoritos {
+    background:rgba(179,181,167,1);
 }
 .panelLogin{
   background: rgba(149,143,121,1);
@@ -66,13 +69,13 @@ nav.filtros{
   background: rgba(241,183,133,1);
 }
 section.agregarDepto {
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255,255,255,0.8);
 }
 section.formularioAgregar {
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255,1);
 }
 section.formularioEliminar {
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255,1);
 }
 #bookButton {
     background-color: rgba(255, 255, 255, 0.8);

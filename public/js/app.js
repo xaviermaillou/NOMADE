@@ -44,6 +44,7 @@ if(language == "es") {
     var mdp_incorrect = "La contraseña es incorrecta";
 
     var pasDeReserve = "No tenes reservas";
+    var editer = "EDITAR";
 
 } else if (language == "fr") {
     var personnes = "personne(s)" ;
@@ -88,6 +89,7 @@ if(language == "es") {
     var mdp_incorrect = "Le mot-de-passe est incorrect";
 
     var pasDeReserve = "Vous n'avez pas de réservations";
+    var editer = "ÉDITER";
 
 } else if (language == "en") {
     var personnes = "people" ;
@@ -132,6 +134,7 @@ if(language == "es") {
     var mdp_incorrect = "The password is incorrect";
 
     var pasDeReserve = "You don't have any bookings";
+    var editer = "EDIT";
 }
 
 $(document).ready(function() {
@@ -144,14 +147,16 @@ const dateIn = datepicker("#dateIn", {
     alwaysShow: true, 
     customDays: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi], 
     customMonths: [janvier, fevrier, mars, avril, mai, juin, juillet, aout, septembre, octobre, novembre, decembre],
-    disableYearOverlay: true
+    disableYearOverlay: true,
+    showAllDates: true
 });
 const dateOut = datepicker("#dateOut", { 
     id: 1, 
     alwaysShow: true, 
     customDays: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi], 
     customMonths: [janvier, fevrier, mars, avril, mai, juin, juillet, aout, septembre, octobre, novembre, decembre],
-    disableYearOverlay: true
+    disableYearOverlay: true,
+    showAllDates: true
 });
 
 $(".activarMapa").click(function(){
@@ -384,6 +389,9 @@ $(document).on("click", ".pestana", function(event) {
         target.parent().delay(300).fadeOut('fast');
 
         delete searchedProperties[className];
+        if(Object.keys(searchedProperties).length == 0) {
+            $(".downPanel").delay(500).animate({opacity:"1"});
+        }
         
         return;
     }
@@ -426,8 +434,13 @@ $(document).on("click",".articulosPrincipales", function (event) {
 
 
     if(target.attr("id") == "bookButton") {
+        dateIn.setDate();
+        dateOut.setDate();
+        $("#bookPropForm .opt1").css("display", "block");
+        $("#bookPropForm .opt2").css("display", "none");
         $("#bookPropForm").animate({opacity: '1'},500);
         $("#bookPropForm").css("z-index", "100000");
+        $("#bookPropForm form").attr("action", "/bookProperty");
         $("#bookPropForm form").append("<input name='id' value='"+thisID+"' style='display:none'></input>");
 
         properties.forEach(function(property) {
@@ -444,6 +457,7 @@ $(document).on("click",".articulosPrincipales", function (event) {
         switch(iteration2) {
             case 1:
                 $(this).children(".favorito").attr("src", "/img/light_mode/heart3.png");
+                $("#myFavorites").contents().filter(function(){return this.nodeType === 3;}).remove();
                 $(".favoritos").children("span").css("opacity", "1");
                 $(".favoritos").children("span").animate({fontSize: "16px"});
                 $("#addFavorites").show();
@@ -525,12 +539,12 @@ var myFavoritesIndex = 0;
 
 properties.forEach(function(property) {
     if(property.owner == userID) {
-        $("#myProperties").prepend('<article class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+'</p></article>');
+        $("#myProperties").prepend('<article id="'+property.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editPropTab">&#9998;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+'</p></article>');
         myPropertiesIndex++;
     }
     myFavorites.forEach(function(myFavorite) {
         if(myFavorite.property_id == property.id) {
-            $("#myFavorites").prepend('<article id="'+property.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none; color: white;" class="closeTab"> &#215;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong></p></article>');
+            $("#myFavorites").prepend('<article id="'+property.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="closeFav"> &#215;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong></p></article>');
             myFavoritesIndex++;
         }
     });
@@ -538,8 +552,7 @@ properties.forEach(function(property) {
         if(myBooking.property_id == property.id) {
             var days = Math.round((myBooking.date_out-myBooking.date_in)/60/60/24);
             var date = new Date(myBooking.date_in*1000).toLocaleDateString();
-            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
-            myFavoritesIndex++;
+            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
             if(myNextBooking != null) {
                 if(myBooking.property_id == myNextBooking.property_id) {
                     $("#downTile1").addClass("nextBookingOk");
@@ -593,14 +606,35 @@ var width = $('.articulosFavoritos').outerWidth();
 $(function(){
     $('.articulosFavoritos').click(function(event){
         var target = $(event.target);
-        removed_fav_id = $(this).attr('id');
+        removed_fav_id = $(this).attr('id').replace(/\D/g,'');
+        var thisID = $(this).attr('data-id');
 
-        if(target.attr('class') == 'closeTab') {
+        if(target.attr('class') == 'closeFav') {
             $("#removeFavForm").animate({opacity: '1'},300);
             $("#removeFavForm").css("z-index", "100000");
             $("#removeFavFormChild").append('<input type="hidden" name="id" value="'+removed_fav_id+'"></input>');
 
             return;
+        }
+
+        if(target.attr('class') == 'editBookingTab') {
+            dateIn.setDate(new Date($(this).attr('data-datein')*1000), true);
+            dateOut.setDate(new Date($(this).attr('data-dateout')*1000), true);
+            $("#bookPropForm .opt1").css("display", "none");
+            $("#bookPropForm .opt2").css("display", "block");
+            $("#cancelBooking").show();
+            $("#bookPropForm").animate({opacity: '1'},500);
+            $("#bookPropForm").css("z-index", "100000");
+            $("#bookPropForm form#editBooking").attr("action", "/editBooking");
+            $("#bookPropForm form").append("<input name='bookingId' value='"+removed_fav_id+"' style='display:none'></input>");
+
+            properties.forEach(function(property) {
+                if(property.id == thisID) {
+                    booked_property = property;
+                }
+            });
+
+            return booked_property;
         }
 
         var iteration=$(this).data('iteration')||1
@@ -707,6 +741,7 @@ $(function(){
 $(document).on("click",".qs-squares", function () {
     var date1 = Date.parse(dateIn.dateSelected)/1000/60/60/24;
     var date2 = Date.parse(dateOut.dateSelected)/1000/60/60/24;
+    console.log(booked_property);
     var range = date2 - date1;
     if(!isNaN(range)) {
         $('#firstDate').css('opacity', 1);

@@ -33,6 +33,10 @@ Route::post('/removeFavorites', 'PropertyController@removeFavorites');
 
 Route::post('/bookProperty', 'PropertyController@bookings');
 
+Route::post('/editBooking', 'PropertyController@bookingEdit');
+
+Route::post('/removeBooking', 'PropertyController@bookingRemove');
+
 Route::post('/changeCountry', 'CountryController@change');
 
 Route::post('/changeLanguage', 'LanguageController@change');

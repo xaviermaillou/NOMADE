@@ -71,12 +71,32 @@ class PropertyController extends Controller
         $newBooking = new Favorite();
 
         $newBooking->booked = 1;
-        $newBooking->date_in = strtotime($request['dateIn']);
-        $newBooking->date_out = strtotime($request['dateOut']);
+        $newBooking->date_in = strtotime($request['dateIn'])+86400;
+        $newBooking->date_out = strtotime($request['dateOut'])+86400;
         $newBooking->property_id = $request['id'];
         $newBooking->user_id = Auth::user()->id;
         $newBooking->price = $request['price'];
         $newBooking->save();
+
+        return redirect('/');
+    }
+
+    public function bookingEdit(Request $request) {
+        $booking_id = $request["bookingId"];
+        
+        $editedBooking = Favorite::where("id", "=", $booking_id)->first();
+        $editedBooking->date_in = strtotime($request['dateIn'])+86400;
+        $editedBooking->date_out = strtotime($request['dateOut'])+86400;
+        $editedBooking->save();
+
+        return redirect('/');
+    }
+
+    public function bookingRemove(Request $request) {
+        $booking_id = $request["bookingId"];
+        
+        $editedBooking = Favorite::where("id", "=", $booking_id)->first();
+        $editedBooking->delete();
 
         return redirect('/');
     }

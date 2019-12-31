@@ -52,6 +52,7 @@ if($language == "es") {
 
     $reserver = "Reservar";
     $reserverProp = "RESERVAR ALOJAMIENTO";
+    $editerReserv = "EDITAR RESERVA";
     $depuis = "Desde";
     $jusqua = "Hasta";
     $prix = "Precio";
@@ -68,6 +69,7 @@ if($language == "es") {
     $dans = "en";
     $jour = "día";
     $voirReserve = "VER RESERVA";
+    $supprimer = "Cancelar reserva";
 }
 
 if($language == "fr") {
@@ -122,6 +124,7 @@ if($language == "fr") {
 
     $reserver = "Réserver";
     $reserverProp = "RÉSERVER LOGEMENT";
+    $editerReserv = "ÉDITER RÉSERVATION";
     $depuis = "Depuis le";
     $jusqua = "Jusqu'au";
     $prix = "Prix";
@@ -138,6 +141,7 @@ if($language == "fr") {
     $dans = "dans";
     $jour = "jour";
     $voirReserve = "VOIR RÉSERVE";
+    $supprimer = "Annuler réservation";
 }
 
 if($language == "en") {
@@ -192,6 +196,7 @@ if($language == "en") {
 
     $reserver = "Book";
     $reserverProp = "BOOK ACCOMMODATION";
+    $editerReserv = "EDIT BOOKING";
     $depuis = "From";
     $jusqua = "To";
     $prix = "Cost";
@@ -208,6 +213,7 @@ if($language == "en") {
     $dans = "in";
     $jour = "day";
     $voirReserve = "CHECK BOOKING";
+    $supprimer = "Cancel booking";
 }
 
 ?>
