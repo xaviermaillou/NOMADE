@@ -70,6 +70,10 @@ if($language == "es") {
     $jour = "día";
     $voirReserve = "VER RESERVA";
     $supprimer = "Cancelar reserva";
+    $ajoute = "Agrega";
+    $taProp = "tu propiedad";
+    $devenez = "HACETE";
+    $partenaire = "SOCIO";
 }
 
 if($language == "fr") {
@@ -142,6 +146,10 @@ if($language == "fr") {
     $jour = "jour";
     $voirReserve = "VOIR RÉSERVE";
     $supprimer = "Annuler réservation";
+    $ajoute = "Ajoutez";
+    $taProp = "votre propriété";
+    $devenez = "DEVENEZ";
+    $partenaire = "PARTENAIRE";
 }
 
 if($language == "en") {
@@ -214,6 +222,10 @@ if($language == "en") {
     $jour = "day";
     $voirReserve = "CHECK BOOKING";
     $supprimer = "Cancel booking";
+    $ajoute = "Add";
+    $taProp = "your property";
+    $devenez = "BECOME";
+    $partenaire = "A PARTNER";
 }
 
 ?>

@@ -73,7 +73,7 @@ header h1 {
     line-height: 50px;
     z-index: 10000;
 }
-form input,select {
+form input,select,textarea {
     font-family:'Titillium Web', sans-serif;
     height: 30px;
     width: 100%;
@@ -163,6 +163,30 @@ footer{
     padding-bottom: 5px;
     font-size: 16px;
 }
+#downTile2 {
+    text-align: center;
+}
+#downTile2 img {
+    display: block;
+    margin: auto;
+    height: 50px; 
+    position: absolute;
+    left: 36px;
+    top: 36px;
+}
+#downTile2 span {
+    display: block;
+    transition: opacity 0.5s;
+}
+#downTile2 div {
+    height: 100%; 
+    width: 100%; 
+    position: absolute; 
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
 .nextBookingOk p{
     transition: opacity 0.5s;
 }
@@ -496,6 +520,35 @@ section.mapa {
     line-height: 20px;
     box-sizing: border-box;
 }
+.quickMessenger {
+    position: absolute;
+    top: -25%;
+    width: 100%;
+    height: 25%;
+    background: white;
+    overflow: hidden;
+}
+.quickMessenger textarea {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 5px;
+    height: 100%;
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 16px;
+}
+#closeMessenger {
+    position: absolute;
+    height: 30px;
+    top: 15%;
+    left: 1%;
+    font-size: 35px;
+    opacity: 0;
+    display: block;
+    line-height: 25px;
+    overflow: hidden;
+}
 
 label.file, label.checkbox {
     font-size: 15px;
@@ -767,6 +820,16 @@ section.formularioEliminar input {
     }
     .nextBookingOk:hover {
         cursor: pointer;
+    }
+
+    #downTile2:hover {
+        cursor: pointer;
+    }
+    #downTile2:hover > div {
+        opacity: 1;
+    }
+    #downTile2:hover > span {
+        opacity: 0;
     }
 
     .retorno:hover {

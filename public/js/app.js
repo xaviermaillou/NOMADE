@@ -45,6 +45,7 @@ if(language == "es") {
 
     var pasDeReserve = "No tenes reservas";
     var editer = "EDITAR";
+    var ecrire = "Escribi acá...";
 
 } else if (language == "fr") {
     var personnes = "personne(s)" ;
@@ -90,6 +91,7 @@ if(language == "es") {
 
     var pasDeReserve = "Vous n'avez pas de réservations";
     var editer = "ÉDITER";
+    var ecrire = "Écrivez ici...";
 
 } else if (language == "en") {
     var personnes = "people" ;
@@ -135,6 +137,7 @@ if(language == "es") {
 
     var pasDeReserve = "You don't have any bookings";
     var editer = "EDIT";
+    var ecrire = "Type here...";
 }
 
 $(document).ready(function() {
@@ -552,7 +555,7 @@ properties.forEach(function(property) {
         if(myBooking.property_id == property.id) {
             var days = Math.round((myBooking.date_out-myBooking.date_in)/60/60/24);
             var date = new Date(myBooking.date_in*1000).toLocaleDateString();
-            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
+            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><div class="quickMessenger"><form id="quickMessengerForm" action="/" method="POST"><textarea name="message" rows="8" cols="30" id="quickMessenger" placeholder="'+ecrire+'"></textarea></form></div><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
             if(myNextBooking != null) {
                 if(myBooking.property_id == myNextBooking.property_id) {
                     $("#downTile1").addClass("nextBookingOk");
@@ -572,6 +575,12 @@ if(myNextBooking == null) {
     $("#downTile2").css("left", "525px");
     $("#downTile3").css("left", "525px");
 }
+
+$("#quickMessenger").on('keypress',function(e) {
+    if(e.which == 13) {
+        $("#quickMessengerForm").submit();
+    }
+});
 
 function cuadrado (){
     var width = $('.articulosFavoritos').outerWidth();
@@ -637,6 +646,25 @@ $(function(){
             return booked_property;
         }
 
+        if(target.attr('class') == 'messageIcon') {
+            $(".quickMessenger").animate({top: '0%'});
+            $('.articulosFavoritos').append('<span id="closeMessenger">&#215;</span>');
+            $("#closeMessenger").animate({opacity: 1});
+
+            return;
+        }
+
+        if(target.attr('id') == 'quickMessenger') {
+            return;
+        }
+
+        if(target.attr('id') == 'closeMessenger') {
+            $(".quickMessenger").animate({top: '-25%'});
+            $("#closeMessenger").animate({opacity: 0});
+
+            return;
+        }
+
         var iteration=$(this).data('iteration')||1
         switch ( iteration) {
             case 1:
@@ -653,6 +681,7 @@ $(function(){
                 $("p", this).animate({opacity: 1});
                 $("span", this).css("display", "inline-block");
                 $(this).removeClass('favOpac');
+                $(".quickMessenger").css("opacity", "1");
                 triggered = 1;
                 break;
 
@@ -670,6 +699,7 @@ $(function(){
                 $("p", this).delay(500).animate({opacity: 0});
                 $("span", this).css("display", "none");
                 $(this).addClass('favOpac');
+                $(".quickMessenger").animate({opacity: 0});
                 triggered = 0;
                 break;
         }

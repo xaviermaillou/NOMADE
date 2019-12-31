@@ -100,6 +100,7 @@ if(Auth::check()) {
 
     $users = User::all()->toArray();
     $properties = Property::all()->toArray();
+    $myProperties = Property::where('owner', '=', $userID)->get()->toArray();
     $myFavorites = Favorite::where('user_id', '=', $userID)->where('favorite', '=', 1)->get('property_id')->toArray();
     $myBookings = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->get()->toArray();
     $myNextBooking = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->where('date_in', '>', $currentTime)->orderBy('date_in', 'ASC')->first();
@@ -183,7 +184,17 @@ if(Auth::check()) {
             @if (!empty($myNextBooking))
             <div id="downTile1" class="downTile"><div><?=$voirReserve?></div><p id="upcomingStayTitle"><?=$prochainSejour?></p><p id="upcomingStayDate"><?=$dans?> <span id="upcomingStayDays"></span> <?=$jour?>(s)</p></div>
             @endif
-            <div id="downTile2" class="downTile"></div>
+            <div id="downTile2" class="downTile">
+                @if(sizeof($myProperties) == 0)
+                    <span style="margin-top: 2px"><?=$ajoute?></span>
+                    <img src="<?=$carpeta?>/plus.png" alt="">
+                    <span style="position: relative; top: 70px;"><?=$taProp?></span>
+                    <div class="plus">
+                        <span style="margin-top: 2px"><?=$devenez?></span>
+                        <span style="position: relative; top: 70px;"><?=$partenaire?></span>
+                    </div>
+                @endif
+            </div>
             <div id="downTile3" class="downTile"></div>
             @endif
 

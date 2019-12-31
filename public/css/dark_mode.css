@@ -23,6 +23,10 @@ footer{
 #checkBooking {
     background-color: rgba(0, 0, 0, 0.8);
 }
+#downTile2 div {
+    background: rgba(0, 0, 0, 0.8);
+}
+
 form input.buscar {
     background: rgba(0, 0, 0, 0.5);
     border-left: solid white 3px;
