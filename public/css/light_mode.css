@@ -54,13 +54,26 @@ nav.filtros{
 .articulosPrincipales p {
     background-color: rgba(255, 255, 255, 0.75);
 }
+.propDetails {
+    background: rgba(255, 255, 255, 0.9);
+}
+#middleColumn {
+    border-left: 1px solid rgb(200, 200, 200);
+    border-right: 1px solid rgb(200, 200, 200);
+}
 .ownerName {
     background: rgba(255, 255, 255, 0.8);
 }
 .infoFavoritos {
     background-color: rgba(255, 255, 255, 0.75);
 }
-.editBookingTab, .editPropTab, .closeFav, .messageIcon {
+.quickMessenger {
+    background: rgba(255, 255, 255, 0.8);
+}
+.editBookingTab, .editPropTab, .closeFav, .messageIcon, #closeMessenger {
+    background: rgba(255, 255, 255, 0.8);
+}
+#sendQuickMessageLabel {
     background: rgba(255, 255, 255, 0.8);
 }
 .panelFavoritos {

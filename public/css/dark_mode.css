@@ -54,6 +54,13 @@ nav.filtros{
 .articulosPrincipales p {
     background-color: rgba(0, 0, 0, 0.75);
 }
+.propDetails {
+    background: rgba(0, 0, 0, 0.9);
+}
+#middleColumn {
+    border-left: 1px solid rgb(75, 75, 75);
+    border-right: 1px solid rgb(75, 75, 75);
+}
 .ownerName {
     background: rgba(0, 0, 0, 0.8);
 }
@@ -63,7 +70,13 @@ nav.filtros{
 .infoFavoritos {
     background-color: rgba(0, 0, 0, 0.75);
 }
-.editBookingTab, .editPropTab, .closeFav, .messageIcon {
+.quickMessenger {
+    background: rgba(0, 0, 0, 0.8);
+}
+.editBookingTab, .editPropTab, .closeFav, .messageIcon, #closeMessenger {
+    background: rgba(0, 0, 0, 0.8);
+}
+#sendQuickMessageLabel {
     background: rgba(0, 0, 0, 0.8);
 }
 .panelLogin{
