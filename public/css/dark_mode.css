@@ -20,7 +20,7 @@ footer{
 .example_pic p, .allerIci{
     background-color: rgba(0, 0, 0, 0.8);
 }
-#checkBooking {
+#checkBooking, #reviewBooking {
     background-color: rgba(0, 0, 0, 0.8);
 }
 #downTile2 div {
@@ -106,6 +106,9 @@ section.formularioEliminar {
 }
 .qs-datepicker .qs-square.qs-range-date-middle {
     background: rgba(255,255,255,0.2) !important;
+}
+.regularMessenger .messageBubble, .regularMessenger .myMessageBubble {
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 @media (min-width: 700px) {

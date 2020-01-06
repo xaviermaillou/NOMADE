@@ -4,6 +4,8 @@ use App\Property;
 use App\Favorite;
 use App\Photo;
 use App\User;
+use App\PropComment;
+use App\Message;
 
     // VAR_DUMP CUSTOMIZADO
 
@@ -104,8 +106,12 @@ if(Auth::check()) {
     $myFavorites = Favorite::where('user_id', '=', $userID)->where('favorite', '=', 1)->get('property_id')->toArray();
     $myBookings = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->get()->toArray();
     $myNextBooking = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->where('date_in', '>', $currentTime)->orderBy('date_in', 'ASC')->first();
+    $myLastBooking = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->where('date_out', '<', $currentTime)->where('reviewed', '=', 0)->orderBy('date_out', 'DESC')->first();
     if(!empty($myNextBooking)) {$myNextBooking->toArray();}
+    if(!empty($myLastBooking)) {$myLastBooking->toArray();}
     $pictures = Photo::all()->toArray();
+    $propertiesReviews = PropComment::all()->toArray();
+    $myMessages = Message::where('recipient', '=', $userID)->orderBy('created_at', 'DESC')->get()->toArray();
 ?>
 
 <!DOCTYPE html>
@@ -181,8 +187,47 @@ if(Auth::check()) {
             </footer>
 
             @if (Auth::check())
-            @if (!empty($myNextBooking))
-            <div id="downTile1" class="downTile"><div><?=$voirReserve?></div><p id="upcomingStayTitle"><?=$prochainSejour?></p><p id="upcomingStayDate"><?=$dans?> <span id="upcomingStayDays"></span> <?=$jour?>(s)</p></div>
+            @if (!empty($myLastBooking))
+                <div id="downTile1" class="downTile">
+                    <section id="reviewSection">
+                        <form action="/sendReview" method="POST">
+                        @csrf
+                            <textarea name="message" cols="30" rows="10" placeholder="<?=$ecrireCommentaire2?>"></textarea>
+                            <figure class="closeReview">&#215;</figure>
+                            <input type="submit" class="aceptar" value="<?=$envoyer?>">
+                        </form>
+                    </section>
+                    <div><?=$commenterReserve?>
+                    </div>
+                    <p id="upcomingStayTitle"><?=$dernierSejour?>
+                    </p>
+                    <p id="upcomingStayDate">
+                        @if ($language == 'es' || $language == 'fr')
+                        <?=$ilya?> 
+                        <span id="upcomingStayDays">
+                        </span> 
+                        <?=$jour?>(s)
+                        @elseif ($language == 'en')
+                        <span id="upcomingStayDays">
+                        </span> 
+                        <?=$jour?>(s)
+                        <?=$ilya?> 
+                        @endif
+                    </p>
+                </div>
+            @elseif (!empty($myNextBooking))
+                <div id="downTile1" class="downTile">
+                    <div><?=$voirReserve?>
+                    </div>
+                    <p id="upcomingStayTitle"><?=$prochainSejour?>
+                    </p>
+                    <p id="upcomingStayDate">
+                        <?=$dans?> 
+                        <span id="upcomingStayDays">
+                        </span> 
+                        <?=$jour?>(s)
+                    </p>
+                </div>
             @endif
             <div id="downTile2" class="downTile">
                 @if(sizeof($myProperties) == 0)
@@ -349,19 +394,6 @@ if(Auth::check()) {
              <li class="pregunta"><?=$question4?><p class="respuesta"><?=$reponse4?></p></li> 
              <li class="pregunta"><?=$question5?><p class="respuesta"><?=$reponse5?></p></li> 
            </ul>
-           <h2 class="aceptar escribirComentarioH2"><?=$ecrireCommentaire?></h2>
-           <form class="formInfo escribirComentario" action="" method="POST">
-            
-           @if(!Auth::check())
-           <h5>
-                <span class="conectarse"><?=$connexion?></span>
-            </h5>
-            @endif
-
-            <textarea name="comentario" rows="5" placeholder="<?=$ecrireCommentaire2?>" id="areaComentario"></textarea>
-            <input type="submit" value="<?=$envoyer?>" class="aceptar" id="aceptarComentario">
-           </form>
-           <h2 class="aceptar forumH2"><?=$commentaires?></h2>
         </section>
 
         <!------------------------------------ AGREGAR PROPIEDAD ---------------------------------------->
@@ -447,6 +479,7 @@ if(Auth::check()) {
     var myFavorites = <?php echo json_encode($myFavorites) ?>;
     var myBookings = <?php echo json_encode($myBookings) ?>;
     var myNextBooking = <?php echo json_encode($myNextBooking) ?>;
+    var myLastBooking = <?php echo json_encode($myLastBooking) ?>;
     var propertyPictures = <?php echo json_encode($pictures) ?>;
     var country = "<?php echo $country; ?>";
     var language = "<?php echo $language ?>";
@@ -454,6 +487,8 @@ if(Auth::check()) {
     var symbol = "<?php echo $symbol ?>";
     var theme = "<?php echo $theme ?>";
     var userID = <?php echo $userID ?>;
+    var propertiesReviews = <?php echo json_encode($propertiesReviews) ?>;
+    var myMessages = <?php echo json_encode($myMessages) ?>;
     console.log("Usuarios:");
     console.log(users);
     console.log("Propiedades:");
@@ -464,6 +499,8 @@ if(Auth::check()) {
     console.log(myBookings);
     console.log("Próxima reserva:");
     console.log(myNextBooking);
+    console.log("Última reserva:");
+    console.log(myLastBooking);
     console.log("Fotos de propiedades:");
     console.log(propertyPictures);
     console.log("País:");
@@ -478,6 +515,10 @@ if(Auth::check()) {
     console.log(theme);
     console.log("ID de usuario:");
     console.log(userID);
+    console.log("Reseñas:");
+    console.log(propertiesReviews);
+    console.log("Mensages:");
+    console.log(myMessages);
 </script>
 
 <script src="/js/app.js"></script>

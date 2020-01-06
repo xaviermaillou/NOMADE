@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Property;
 use App\Favorite;
 use App\Photo;
+use App\PropComment;
 use Auth;
 
 class PropertyController extends Controller
@@ -101,4 +102,20 @@ class PropertyController extends Controller
         return redirect('/');
     }
     
+    public function sendReview(Request $request) {
+        $booking_id = $request["booking_id"];
+
+        $newReview = new PropComment();
+
+        $newReview->message = $request['message'];
+        $newReview->property_id = $request['property_id'];
+        $newReview->author = Auth::user()->id;
+        $newReview->save();
+
+        $reviewedProperty = Favorite::where("id", "=", $booking_id)->first();
+        $reviewedProperty->reviewed = 1;
+        $reviewedProperty->save();
+
+        return redirect('/');
+    }
 }

@@ -66,9 +66,12 @@ if($language == "es") {
 
     $allerIci = "ELEGIR ESTE DESTINO";
     $prochainSejour = "PRÓXIMA ESTADÍA";
+    $dernierSejour = "ÚLTIMA ESTADÍA";
     $dans = "en";
+    $ilya = "hace";
     $jour = "día";
     $voirReserve = "VER RESERVA";
+    $commenterReserve = "DEJAR RESEÑA";
     $supprimer = "Cancelar reserva";
     $ajoute = "Agrega";
     $taProp = "tu propiedad";
@@ -142,9 +145,12 @@ if($language == "fr") {
 
     $allerIci = "CHOISIR CETTE DESTINATION";
     $prochainSejour = "PROCHAIN SÉJOUR";
+    $dernierSejour = "DERNIER SÉJOUR";
     $dans = "dans";
+    $ilya = "il y a";
     $jour = "jour";
     $voirReserve = "VOIR RÉSERVE";
+    $commenterReserve = "LAISSER UN AVIS";
     $supprimer = "Annuler réservation";
     $ajoute = "Ajoutez";
     $taProp = "votre propriété";
@@ -218,9 +224,12 @@ if($language == "en") {
 
     $allerIci = "PICK THIS DESTINATION";
     $prochainSejour = "UPCOMING STAY";
+    $dernierSejour = "LAST STAY";
     $dans = "in";
+    $ilya = "ago";
     $jour = "day";
     $voirReserve = "CHECK BOOKING";
+    $commenterReserve = "LEAVE A REVIEW";
     $supprimer = "Cancel booking";
     $ajoute = "Add";
     $taProp = "your property";

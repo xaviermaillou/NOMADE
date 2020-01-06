@@ -88,6 +88,7 @@ form input,select,textarea {
     border-radius: 0;
     padding: 0;
     font-size: 15px;
+    resize: none;
     -webkit-appearance: none;
     -moz-appearance:    none;
     appearance:         none;
@@ -147,6 +148,7 @@ footer{
     box-sizing: border-box;
     position: fixed;
     opacity: 1;
+    overflow: hidden;
     animation-name: opac;
     animation-duration: 4s;
 }
@@ -190,7 +192,7 @@ footer{
 .nextBookingOk p{
     transition: opacity 0.5s;
 }
-#checkBooking {
+#checkBooking, #reviewBooking {
     box-sizing: border-box;
     font-size: 20px;
     position: absolute;
@@ -200,6 +202,46 @@ footer{
     text-align: center;
     padding-top: 105px;
     transition: opacity 0.5s;
+}
+#reviewSection {
+    background: white;
+    position: absolute;
+    left: 0;
+    top: -250px;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+}
+#reviewSection:hover {
+    cursor: initial;
+}
+#reviewSection textarea {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 5px;
+    height: 220px;
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 16px;
+}
+#reviewSection input {
+    margin-left: 30px;
+    font-size: 16px;
+    text-transform: uppercase;
+    width: auto;
+}
+.closeReview {
+    position: absolute;
+    font-size: 35px;
+    bottom: 5px;
+    left: 5px;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    overflow: hidden;
+    transform: translateY(1px);
 }
 #downTile1 {
     left: 525px;
@@ -462,6 +504,28 @@ section.mapa {
     bottom: 20px;
     transform: translateX(-50%) rotate(180deg);
 }
+#slideRight {
+    font-size: 40px;
+    font-family: monospace;
+    opacity: 0.3;
+    display: block;
+    height: 20px;
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+}
+#slideLeft {
+    font-size: 40px;
+    font-family: monospace;
+    opacity: 0.3;
+    display: block;
+    height: 20px;
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%) rotate(270deg);
+}
 .propDetails {
     height: 100%;
     width: 100%;
@@ -489,7 +553,7 @@ section.mapa {
     height: 100%;
     width: 100%;
 }
-.propEquipments h5 {
+.propEquipments h5, .propComments h5 {
     margin: 0px;
     margin-bottom: 15px;
     width: 100%;
@@ -508,15 +572,45 @@ section.mapa {
     top: 0px;
     height: 100%;
     width: 10%;
-    background: black;
+}
+.leftTab {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 10%;
 }
 .propComments {
     display: inline-block;
     position: relative;
     top: -101.5%;
-    right: -102.5%;
+    left: 102.5%;
     height: 100%;
     width: 100%;
+}
+.reviewsContainer {
+    width: 87.5%;
+    margin: auto;
+    height: 100%;
+}
+.propReview {
+    display: inline-block;
+    width: 30%;
+    height: 29%;
+    background: white;
+    overflow: hidden;
+    padding: 5px;
+    margin: 5px;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 3px lightgray;
+    -webkit-box-shadow: 1px 1px 3px lightgray;
+}
+.propReview h5 {
+    margin-bottom: 0px;
+}
+.reviewMessage {
+    font-size: 15px;
+    opacity: 0.5;
 }
 .profile {
     height: 30px;
@@ -843,6 +937,53 @@ section.formularioEliminar input {
     font-weight: bolder;
 }
 
+.regularMessenger {
+    height: 35px;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid gray;
+    box-sizing: border-box;
+}
+.regularMessenger h5{
+    margin: 0px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+.regularMessenger p {
+    margin: 0px;
+    margin-bottom: 5px;
+}
+.regularMessenger .messagesContainer{
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: scroll;
+    height: 190px;
+    border-bottom: 1px solid gray;
+    box-sizing: border-box;
+}
+.regularMessenger .messageBubble {
+    padding: 5px;
+    margin-right: 20%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.regularMessenger .myMessageBubble {
+    padding: 5px;
+    margin-left: 20%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.regularMessenger textarea {
+    margin: 0px;
+    height: 50px;
+    border: none;
+}
+.regularMessenger input.aceptar {
+    font-size: 16px;
+}
+
 @media (min-width: 700px) {
 
     form #lupa:hover {
@@ -907,7 +1048,7 @@ section.formularioEliminar input {
     .nextBookingOk:hover > p {
         opacity: 0;
     }
-    .nextBookingOk:hover > #checkBooking {
+    .nextBookingOk:hover > #checkBooking, .nextBookingOk:hover > #reviewBooking {
         opacity: 1;
     }
     .nextBookingOk:hover {
@@ -984,4 +1125,9 @@ section.formularioEliminar input {
         cursor: pointer;
         opacity: 0.5;
     }
+    .closeReview:hover {
+        cursor: pointer;
+        opacity: 0.5;
+    }
+
 }

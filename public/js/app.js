@@ -48,7 +48,10 @@ if(language == "es") {
     var ecrire = "Escribi acá...";
     var envoyer = "ENVIAR";
 
-    var details = "DETALLES";
+    var details = "DETALLES DEL ALOJAMIENTO";
+    var commentaires = "LO QUE OTROS USUARIOS COMENTARON";
+
+    var mesMessages = "MIS MENSAJES";
 
 } else if (language == "fr") {
     var personnes = "personne(s)" ;
@@ -97,7 +100,10 @@ if(language == "es") {
     var ecrire = "Écrivez ici...";
     var envoyer = "ENVOYER";
 
-    var details = "DÉTAILS";
+    var details = "DÉTAILS DU LOGEMENT";
+    var commentaires = "CE QUE D'AUTRES UTILISATEURS ONT COMMENTÉ";
+
+    var mesMessages = "MES MESSAGES";
 
 } else if (language == "en") {
     var personnes = "people" ;
@@ -146,7 +152,10 @@ if(language == "es") {
     var ecrire = "Type here...";
     var envoyer = "SEND";
 
-    var details = "SPECIFICS";
+    var details = "DETAILS ABOUT THE ACCOMMODATION";
+    var commentaires = "WHAT OTHER USERS COMMENTED";
+
+    var mesMessages = "MY MESSAGES";
 }
 
 $(document).ready(function() {
@@ -294,6 +303,16 @@ $(document).on("click", "#checkBooking", function() {
         triggered++;
     }
 });
+$(document).on("click", "#reviewBooking", function() {
+    var booking_id = $(this).attr("booking-id");
+    var property_id = $(this).attr("property-id");
+    $("form", "#reviewSection").append("<input type='hidden' name='property_id' value='"+property_id+"'>");
+    $("form", "#reviewSection").append("<input type='hidden' name='booking_id' value='"+booking_id+"'>");
+    $("#reviewSection").animate({top: "0px"});
+});
+$(document).on("click", ".closeReview", function() {
+    $("#reviewSection").animate({top: "-250px"});
+});
 
 var searchedProperties = {};
 
@@ -330,10 +349,27 @@ $('#formBuscar').submit(function search(event){
                     owner_name = user.name;
                 }
             });
-            $('.seccionPrincipalArticulos').prepend('<div id="'+property.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+property.id+'" data-picture="'+property.main_picture+'" class="articulosPrincipales '+multiplier*property.price+'price '+property.area+'area '+property.beds+'beds '+property.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+property.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+property.title+'</p><p class="infoCompleta" style="opacity: 0">'+property.area+' m<sup>2</sup> | '+property.beds+' '+personnes+' | <strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+property.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"></div></div><div class="propComments"></div></div></div></article></div>')
+            $('.seccionPrincipalArticulos').prepend('<div id="'+property.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+property.id+'" data-picture="'+property.main_picture+'" class="articulosPrincipales '+multiplier*property.price+'price '+property.area+'area '+property.beds+'beds '+property.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+property.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+property.title+'</p><p class="infoCompleta" style="opacity: 0">'+property.area+' m<sup>2</sup> | '+property.beds+' '+personnes+' | <strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+property.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"><span id="slideRight">^</span></div></div><div class="propComments"><h5>'+commentaires+'</h5><div class="leftTab"><span id="slideLeft">^</span></div><section class="reviewsContainer"></section></div></div></div></article></div>')
             sameLocationProperties.push(property);
+
+            var reviewsIndex = 0;
+
+            propertiesReviews.forEach(function(propertyReview) {
+                if(propertyReview.property_id == property.id) {
+                    users.forEach(function(user){
+                        if(user.id == propertyReview.author) {
+                            author_avatar = user.avatar;
+                            author_name = user.name;
+                        }
+                    });
+                    if(reviewsIndex <= 9) {
+                        $(".reviewsContainer", ".articleContainer#"+property.id).append('<div class="propReview"><h5>'+author_name+'</h5><div class="reviewMessage"><i>'+propertyReview.message+'</i></div></div>');
+                    }
+                }
+            });
         }
     });
+
     searchedProperties[$busqueda] = sameLocationProperties;
     $('.seccionPrincipalArticulos').prepend('<div class="pestana" id="'+$busqueda+'">'+$('#buscar').val()+'<span class="closeTab"> &#215;</span></div>');
 
@@ -363,7 +399,7 @@ function filter() {
             k++;
             sameLocationProperties.forEach(function(filteredProperty) {
                 if(filteredProperty.area >= area && filteredProperty.price <= price && (beds == "N" || beds == filteredProperty.beds)) {
-                    $('.seccionPrincipalArticulos').prepend('<div id="'+filteredProperty.id+'" class="articleContainer" style="margin: 0; padding: 0; border: none; background-color: rgba(125,125,125,0.8);"><article id="'+filteredProperty.id+'" data-picture="'+filteredProperty.main_picture+'" class="articulosPrincipales '+multiplier*filteredProperty.price+'price '+filteredProperty.area+'area '+filteredProperty.beds+'beds '+filteredProperty.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+filteredProperty.main_picture+'\'); height: 200px; border: none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+filteredProperty.title+'</p><p class="infoCompleta" style="opacity: 0">'+filteredProperty.area+' m<sup>2</sup> | '+filteredProperty.beds+' '+personnes+' | <strong>'+Math.round(multiplier*filteredProperty.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+property.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"></div></div><div class="propComments"></div></div></div></article></div>')
+                    $('.seccionPrincipalArticulos').prepend('<div id="'+filteredProperty.id+'" class="articleContainer" style="margin: 0; padding: 0; border: none; background-color: rgba(125,125,125,0.8);"><article id="'+filteredProperty.id+'" data-picture="'+filteredProperty.main_picture+'" class="articulosPrincipales '+multiplier*filteredProperty.price+'price '+filteredProperty.area+'area '+filteredProperty.beds+'beds '+filteredProperty.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+filteredProperty.main_picture+'\'); height: 200px; border: none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+filteredProperty.title+'</p><p class="infoCompleta" style="opacity: 0">'+filteredProperty.area+' m<sup>2</sup> | '+filteredProperty.beds+' '+personnes+' | <strong>'+Math.round(multiplier*filteredProperty.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+filteredProperty.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"><span id="slideRight">^</span></div></div><div class="propComments"><h5>'+commentaires+'</h5><div class="leftTab"><span id="slideLeft">^</span></div></div></div></div></article></div>')
                     i++;
                     e++;
                 }
@@ -506,10 +542,17 @@ $(document).on("click",".articulosPrincipales", function (event) {
 
         return;
     }
-    if(target.attr('class') == 'rightTab') {
+    if(target.attr('class') == 'rightTab' || target.parent().attr('class') == 'rightTab') {
+        $('.propEquipments', this).animate({left: '-102.5%'});
+        $('.propComments', this).animate({left: '0%'});
         return;
     }
-    if(target.attr('class') == 'propDetails' || target.parent().attr('class') == 'propDetails' || target.parent().parent().attr('class') == 'propDetails' || target.parent().parent().parent().attr('class') == 'propDetails' || target.attr('class') == 'infoPrevia') {
+    if(target.attr('class') == 'leftTab' || target.parent().attr('class') == 'leftTab') {
+        $('.propEquipments', this).animate({left: '0%'});
+        $('.propComments', this).animate({left: '102.5%'});
+        return;
+    }
+    if(target.attr('class') == 'propDetails' || target.parent().attr('class') == 'propDetails' || target.parent().parent().attr('class') == 'propDetails' || target.parent().parent().parent().attr('class') == 'propDetails' || target.parent().parent().parent().parent().attr('class') == 'propDetails' || target.parent().parent().parent().parent().parent().attr('class') == 'propDetails' || target.parent().parent().parent().parent().parent().parent().attr('class') == 'propDetails' || target.attr('class') == 'infoPrevia') {
         return;
     }
     if(target.attr("id") == "favorito") {
@@ -598,6 +641,7 @@ $(document).on("click",".articulosPrincipales", function (event) {
 
 var myPropertiesIndex = 0;
 var myFavoritesIndex = 0;
+var quick = 0;
 
 properties.forEach(function(property) {
     if(property.owner == userID) {
@@ -614,8 +658,20 @@ properties.forEach(function(property) {
         if(myBooking.property_id == property.id) {
             var days = Math.round((myBooking.date_out-myBooking.date_in)/60/60/24);
             var date = new Date(myBooking.date_in*1000).toLocaleDateString();
-            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><div class="quickMessenger"><form id="quickMessengerForm" action="/" method="POST"><textarea name="message" rows="8" cols="30" id="quickMessenger" placeholder="'+ecrire+'"></textarea><input id="sendQuickMessage" style="opacity: 0;" type="submit" class="aceptar"></form></div><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
-            if(myNextBooking != null) {
+            quick++;
+            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><div class="quickMessenger"><form data-send="booking'+myBooking.id+'" class="quickMessengerForm" action="/sendMessage" method="POST"><input name="recipient" type="hidden" value='+property.owner+'><textarea name="message" rows="8" cols="30" class="quickMessengerText" placeholder="'+ecrire+'"></textarea></form></div><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
+            if(myLastBooking != null) {
+                if(myBooking.property_id == myLastBooking.property_id) {
+                    $("#downTile1").addClass("nextBookingOk");
+                    $("div", "#downTile1").attr("id", "reviewBooking");
+                    $("div", "#downTile1").attr("booking-id", myBooking.id);
+                    $("div", "#downTile1").attr("property-id", property.id);
+                    var days2 = Math.round((($.now()/1000)-myBooking.date_out)/60/60/24);
+                    $("#downTile1").css('background-image','url("/storage/'+property.main_picture+'")');
+                    $("#upcomingStayDays").html(days2);
+                }
+            }
+            else if(myNextBooking != null) {
                 if(myBooking.property_id == myNextBooking.property_id) {
                     $("#downTile1").addClass("nextBookingOk");
                     $("div", "#downTile1").attr("id", "checkBooking");
@@ -625,15 +681,57 @@ properties.forEach(function(property) {
                     $("#upcomingStayDays").html(days2);
                 }
             }
+            if((($.now()/1000)-myBooking.date_out) > 0) {
+                $(".editBookingTab", "#booking"+myBooking.id).remove();
+            }
         }
     });
 });
 if (myPropertiesIndex == 0) {$("#myProperties").prepend(publie);}
 if (myFavoritesIndex == 0) {$("#myFavorites").prepend(favoris);}
-if(myNextBooking == null) {
+if(myNextBooking == null && myLastBooking == null) {
     $("#downTile2").css("left", "525px");
     $("#downTile3").css("left", "525px");
 }
+
+var usersContact = [];
+
+myMessages.forEach(function(message) {
+    users.forEach(function(user) {
+        if(user.id == message.author && jQuery.inArray(user, usersContact) < 0) {
+            usersContact.push(user);
+        }
+    });
+});
+
+usersContact.forEach(function(user) {
+    $('#panelInfo').prepend('<article id="author'+user.id+'" class="regularMessenger"><h5 class="aceptar">'+user.name+'</h5><p class="messagesContainer"></p></article>');
+    myMessages.forEach(function(message) {
+        if(message.author == user.id && message.author != userID) {
+            $('#author'+user.id+' .messagesContainer').append('<p class="messageBubble">'+message.message+'</p>');
+        } else if (message.author == user.id && message.author == userID) {
+            $('#author'+user.id+' .messagesContainer').append('<p class="myMessageBubble">'+message.message+'</p>');
+        }
+    });
+    $('#author'+user.id).append('<form action="/sendMessage" method="POST"><input type="hidden" name="recipient" value="'+user.id+'"><textarea name="message"></textarea><input type="submit" class="aceptar" value="'+envoyer+'"></form>');
+});
+$('#panelInfo').prepend('<h2 class="myMessagesH2">'+mesMessages+'</h2>');
+
+$(document).on("click", ".regularMessenger h5", function() {
+    var iteration=$(this).data('iteration')||1
+        switch ( iteration) {
+            case 1:
+                $(this).parent().animate({height: '310px'});
+                break;
+
+            case 2:
+                $(this).parent().animate({height: '35px'});
+                break;
+        }
+        iteration++;
+        if (iteration>2) iteration=1
+        $(this).data('iteration',iteration)
+})
 
 function cuadrado (){
     var width = $('.articulosFavoritos').outerWidth();
@@ -670,6 +768,7 @@ $(function(){
         var target = $(event.target);
         removed_fav_id = $(this).attr('id').replace(/\D/g,'');
         var thisID = $(this).attr('data-id');
+        var uniqueID = $(this).attr('id');
 
         if(target.attr('class') == 'closeFav') {
             $("#removeFavForm").animate({opacity: '1'},300);
@@ -703,14 +802,14 @@ $(function(){
             $(".messageIcon", this).animate({opacity: 0});
             $(".editBookingTab", this).animate({opacity: 0});
             $(".quickMessenger", this).animate({top: '2.5%'});
-            $(this).append('<span id="closeMessenger">&#215;</span><span id="sendQuickMessageLabel">'+envoyer+'</span>');
+            $(this).append('<span id="closeMessenger">&#215;</span><span data-send="'+uniqueID+'" id="sendQuickMessageLabel">'+envoyer+'</span>');
             $("#closeMessenger", this).animate({opacity: 1});
             $("#sendQuickMessageLabel", this).animate({opacity: 1});
 
             return;
         }
 
-        if(target.attr('id') == 'quickMessenger') {
+        if(target.attr('class') == 'quickMessengerText') {
             return;
         }
 
@@ -725,7 +824,8 @@ $(function(){
         }
 
         if(target.attr('id') == 'sendQuickMessageLabel') {
-            $("#quickMessengerForm").submit();
+            var uniqueID = $(this).attr('id');
+            $(".quickMessengerForm[data-send='"+uniqueID+"']").submit();
 
             return;
         }

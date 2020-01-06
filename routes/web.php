@@ -37,11 +37,15 @@ Route::post('/editBooking', 'PropertyController@bookingEdit');
 
 Route::post('/removeBooking', 'PropertyController@bookingRemove');
 
+Route::post('/sendReview', 'PropertyController@sendReview');
+
 Route::post('/changeCountry', 'CountryController@change');
 
 Route::post('/changeLanguage', 'LanguageController@change');
 
 Route::post('/changeCurrency', 'CurrencyController@change');
+
+Route::post('/sendMessage', 'MessengerController@send');
 
 Route::get('/map', function() {
     return view('map');
