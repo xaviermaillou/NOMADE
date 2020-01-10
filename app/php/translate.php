@@ -50,7 +50,7 @@ if($language == "es") {
     $choisirPhoto2 = "Agregar fotos";
     $choisirPhoto3 = "Elegir una foto principal";
 
-    $reserver = "Reservar";
+    $reserver = "RESERVAR";
     $reserverProp = "RESERVAR ALOJAMIENTO";
     $editerReserv = "EDITAR RESERVA";
     $depuis = "Desde";
@@ -58,7 +58,6 @@ if($language == "es") {
     $prix = "Precio";
     $reserves = "MIS RESERVAS";
 
-    $eliminerFav = "Eliminar de favoritos ?";
     $oui = "Si";
     $non = "No";
 
@@ -72,11 +71,21 @@ if($language == "es") {
     $jour = "día";
     $voirReserve = "VER RESERVA";
     $commenterReserve = "DEJAR RESEÑA";
-    $supprimer = "Cancelar reserva";
+    $supprimer = "CANCELAR RESERVA";
     $ajoute = "Agrega";
     $taProp = "tu propiedad";
     $devenez = "HACETE";
     $partenaire = "SOCIO";
+
+    $mesMessages = "MIS MENSAJES";
+
+    $ajouterProp = "AGREGAR MI PROPIEDAD";
+    $choisirTitre = "Elegi un título";
+    $choisirVille = "Seleccione la ciudad";
+    $combienM2 = "Cuantos ";
+    $combienPersonnes = "Cuantas personas?";
+    $combienParMois = "Cuanto por noche?";
+    $ajouter = "AGREGAR";
 }
 
 if($language == "fr") {
@@ -129,7 +138,7 @@ if($language == "fr") {
     $choisirPhoto2 = "Ajouter des photos";
     $choisirPhoto3 = "Choisir une photo principale";
 
-    $reserver = "Réserver";
+    $reserver = "RÉSERVER";
     $reserverProp = "RÉSERVER LOGEMENT";
     $editerReserv = "ÉDITER RÉSERVATION";
     $depuis = "Depuis le";
@@ -137,7 +146,6 @@ if($language == "fr") {
     $prix = "Prix";
     $reserves = "MES RÉSERVATIONS";
 
-    $eliminerFav = "Éliminer des favoris ?";
     $oui = "Oui";
     $non = "Non";
 
@@ -151,11 +159,21 @@ if($language == "fr") {
     $jour = "jour";
     $voirReserve = "VOIR RÉSERVE";
     $commenterReserve = "LAISSER UN AVIS";
-    $supprimer = "Annuler réservation";
+    $supprimer = "ANNULER RÉSERVATION";
     $ajoute = "Ajoutez";
     $taProp = "votre propriété";
     $devenez = "DEVENEZ";
     $partenaire = "PARTENAIRE";
+
+    $mesMessages = "MES MESSAGES";
+
+    $ajouterProp = "AJOUTER MA PROPRIÉTÉ";
+    $choisirTitre = "Choisissez un titre";
+    $choisirVille = "Sélectionnez la ville";
+    $combienM2 = "Combien de ";
+    $combienPersonnes = "Combien de personnes ?";
+    $combienParMois = "Combien par nuit ?";
+    $ajouter = "AJOUTER";
 }
 
 if($language == "en") {
@@ -208,7 +226,7 @@ if($language == "en") {
     $choisirPhoto2 = "Add pictures";
     $choisirPhoto3 = "Choose main picture";
 
-    $reserver = "Book";
+    $reserver = "BOOK";
     $reserverProp = "BOOK ACCOMMODATION";
     $editerReserv = "EDIT BOOKING";
     $depuis = "From";
@@ -216,7 +234,6 @@ if($language == "en") {
     $prix = "Cost";
     $reserves = "MY BOOKINGS";
 
-    $eliminerFav = "Eliminate from favorites?";
     $oui = "Yes";
     $non = "No";
 
@@ -230,11 +247,21 @@ if($language == "en") {
     $jour = "day";
     $voirReserve = "CHECK BOOKING";
     $commenterReserve = "LEAVE A REVIEW";
-    $supprimer = "Cancel booking";
+    $supprimer = "CANCEL BOOKING";
     $ajoute = "Add";
     $taProp = "your property";
     $devenez = "BECOME";
     $partenaire = "A PARTNER";
+
+    $mesMessages = "MY MESSAGES";
+
+    $ajouterProp = "ADD MY PROPERTY";
+    $choisirTitre = "Pick a title";
+    $choisirVille = "Select the city";
+    $combienM2 = "How many ";
+    $combienPersonnes = "How many people?";
+    $combienParMois = "How much per night?";
+    $ajouter = "ADD";
 }
 
 ?>

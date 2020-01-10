@@ -111,7 +111,6 @@ if(Auth::check()) {
     if(!empty($myLastBooking)) {$myLastBooking->toArray();}
     $pictures = Photo::all()->toArray();
     $propertiesReviews = PropComment::all()->toArray();
-    $myMessages = Message::where('recipient', '=', $userID)->orderBy('created_at', 'DESC')->get()->toArray();
 ?>
 
 <!DOCTYPE html>
@@ -156,7 +155,7 @@ if(Auth::check()) {
             <nav class="encabezado">
                 <div class="fotoUsuario"><img src="<?=$avatar?>" id="fotoDeUsuario" alt=""></div>
                 <div class="favoritos"><img src="<?=$carpeta?>/heart.png" alt=""><br><span style="opacity: 0; font-size: 30px; position: relative; top: -12px; text-align: center; width: 30px; display: inline-block;">&#9679</span></div>
-                <div class="info"><img src="<?=$carpeta?>/info.png" alt=""></div>
+                <div class="info"><img src="<?=$carpeta?>/info.png" alt=""><br><span style="opacity: 0; font-size: 16px; position: relative; top: -12px; text-align: center; width: 27px; display: inline-block;">&#9679</span></div>
                 @if(Auth::check())<div class="plus"><img src="<?=$carpeta?>/plus.png" alt=""></div>@endif
             </nav>
         </header>
@@ -257,10 +256,6 @@ if(Auth::check()) {
             <h2><?=$reserves?></h2>
             <div id="myBookings"></div>
             <h2><?=$favoris?></h2>
-            <form action="/addFavorites" method="POST" style="display:none;" id="addFavorites">
-            @csrf
-                <input type="submit" value="Guardar nuevo(s) favorito(s)" class="aceptar">
-            </form>
             <div id="myFavorites"></div>
             <h2><?=$proprietes?></h2>
             <div id="myProperties"></div>
@@ -386,6 +381,10 @@ if(Auth::check()) {
         <!------------------------------------------ INFO ---------------------------------------------->
 
         <section class="panel panelInfo" id="panelInfo">
+            <h2 class="myMessagesH2"><?=$mesMessages?></h2>
+            <section class="generalMessenger">
+
+            </section>
            <h2 class="aceptar preguntasFrecuentesH2"><?=$questionsFrequentes?></h2>
            <ul class="preguntasFrecuentes" type="bullet">
              <li class="pregunta"><?=$question1?><p class="respuesta"><?=$reponse1?></p></li> 
@@ -401,13 +400,13 @@ if(Auth::check()) {
         <section class="agregarDepto" id="agregarDepto">
             <section class="formularioAgregar">
                 <img src="<?=$carpeta?>/cruz.png" class="cerrar" alt="">
-                <h1>AGREGAR PROPIEDAD</h1>
+                <h1><?=$ajouterProp?></h1>
                 <form action="/addProperty" method="POST" enctype="multipart/form-data">
                 @csrf
-                    <input type="text" name="title" placeholder="Escribí un título">
+                    <input type="text" name="title" placeholder="<?=$choisirTitre?>">
 
                     <select name="location">
-                        <option value="" selected disabled hidden>Elegí la ubicación</option>
+                        <option value="" selected disabled hidden><?=$choisirVille?></option>
                         <option value="buenos aires">Buenos Aires</option>
                         <option value="ushuaia">Ushuaia</option>
                         <option value="bariloche">Bariloche</option>
@@ -415,17 +414,14 @@ if(Auth::check()) {
                         <option value="iguazu">Iguazu</option>
                         <option value="el calafate">El Calafate</option>
                     </select>
-
-                    <!-- <label for="foto2" class="file formLogin"></label>
-                    <input type="file" id="foto2" class="file" name="main_picture"> -->
                     
                     <label for="foto2" class="file formLogin"><?=$choisirPhoto2?></label>
                     <input type="file" id="foto2" class="file" name="pictures[]" multiple="multiple">
                     
-                    <input type="text" name="area" placeholder="Cuántos m2?">
-                    <input type="text" name="beds" placeholder="Cuántas camas?">
-                    <input type="text" name="price" placeholder="Cuánto por mes?">
-                    <input type="submit" value="Agregar" class="aceptar">
+                    <input type="text" name="area" placeholder="<?=$combienM2?>m²?">
+                    <input type="text" name="beds" placeholder="<?=$combienPersonnes?>">
+                    <input type="text" name="price" placeholder="<?=$combienParMois?>">
+                    <input type="submit" value="<?=$ajouter?>" class="aceptar">
                 </form>
             </section>
         </section>
@@ -449,21 +445,8 @@ if(Auth::check()) {
                 </form>
                 <form action="/removeBooking" style="display: none;" method="POST" id="cancelBooking">
                 @csrf
-                <input type="submit" value="<?=$supprimer?>" class="aceptar" style="margin-left: 10px; width: 150px;">
+                <input type="submit" value="<?=$supprimer?>" class="aceptar" style="margin-left: 10px; width: fit-content;">
                 </form>
-            </section>
-        </section>
-
-        <!-------------------------------------ELIMINAR FAVORITO---------------------------------------->
-
-        <section class="agregarDepto" id="removeFavForm">
-            <section class="formularioEliminar">
-            <h1 style="margin-left: 10px;"><?=$eliminerFav?></h1>
-            <form action="/removeFavorites" method="POST" id="removeFavFormChild">
-            @csrf 
-                <input type="submit" name="eliminateFavYes" id="eliminateFavYes" value=<?=$oui?> class="aceptar">
-                <input type="submit" id="eliminateFavNo" value=<?=$non?> class="aceptar">
-            </form>
             </section>
         </section>
 
@@ -488,7 +471,6 @@ if(Auth::check()) {
     var theme = "<?php echo $theme ?>";
     var userID = <?php echo $userID ?>;
     var propertiesReviews = <?php echo json_encode($propertiesReviews) ?>;
-    var myMessages = <?php echo json_encode($myMessages) ?>;
     console.log("Usuarios:");
     console.log(users);
     console.log("Propiedades:");
@@ -517,8 +499,6 @@ if(Auth::check()) {
     console.log(userID);
     console.log("Reseñas:");
     console.log(propertiesReviews);
-    console.log("Mensages:");
-    console.log(myMessages);
 </script>
 
 <script src="/js/app.js"></script>

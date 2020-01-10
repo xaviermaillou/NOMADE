@@ -124,8 +124,6 @@
 
       $(document).on('submit', '#formBuscar', function() {
 
-        console.log($busqueda);
-
         if($busqueda == "ushuaia") {
         var lon = -68.3;
         var lat = -54.8;
@@ -150,7 +148,7 @@
         var lon = -72.27682;
         var lat = -50.34075;
         }
-
+        
         worldFly(lon, lat);
       })
 

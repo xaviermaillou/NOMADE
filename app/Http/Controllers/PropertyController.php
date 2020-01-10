@@ -44,18 +44,29 @@ class PropertyController extends Controller
         return redirect('/');
     }
 
+    public function edit(Request $request) {
+        $property_id = $request['id'];
+
+        $editedProperty = Property::where("id", "=", $property_id)->first();
+        $editedProperty->title = $request['title'];
+        $editedProperty->location = $request['location'];
+        $editedProperty->area = $request['area'];
+        $editedProperty->beds = $request['beds'];
+        $editedProperty->price = $request['price'];
+
+        $editedProperty->save();
+
+        return redirect('/');
+    }
+
     public function favorites(Request $request) {
 
-        $favorites = $request['id'];
-
-        foreach($favorites as $favorite) {
-            $newFavorite = new Favorite();
-            $newFavorite->property_id = $favorite;
-            $newFavorite->user_id = Auth::user()->id;
-            $newFavorite->favorite = 1;
-            $newFavorite->save();
-        }
-
+        $newFavorite = new Favorite();
+        $newFavorite->property_id = $request['id'];
+        $newFavorite->user_id = Auth::user()->id;
+        $newFavorite->favorite = 1;
+        $newFavorite->save();
+        
         return redirect('/');
     }
 
@@ -88,6 +99,7 @@ class PropertyController extends Controller
         $editedBooking = Favorite::where("id", "=", $booking_id)->first();
         $editedBooking->date_in = strtotime($request['dateIn'])+86400;
         $editedBooking->date_out = strtotime($request['dateOut'])+86400;
+        $editedBooking->price = $request['price'];
         $editedBooking->save();
 
         return redirect('/');

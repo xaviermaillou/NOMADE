@@ -27,6 +27,8 @@ Route::post('/uploadAvatar', 'AvatarController@store');
 
 Route::post('/addProperty', 'PropertyController@add');
 
+Route::post('/editProperty', 'PropertyController@edit');
+
 Route::post('/addFavorites', 'PropertyController@favorites');
 
 Route::post('/removeFavorites', 'PropertyController@removeFavorites');
@@ -49,4 +51,12 @@ Route::post('/sendMessage', 'MessengerController@send');
 
 Route::get('/map', function() {
     return view('map');
+});
+
+Route::get('/messenger', function() {
+    return view('messenger');
+});
+
+Route::get('/messengerInside', function() {
+    return view('messengerInside');
 });

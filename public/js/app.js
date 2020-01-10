@@ -158,11 +158,6 @@ if(language == "es") {
     var mesMessages = "MY MESSAGES";
 }
 
-$(document).ready(function() {
-    countrySelect();
-    $(".mapa").load("/map");
-});
-
 const dateIn = datepicker("#dateIn", { 
     id: 1, 
     alwaysShow: true, 
@@ -235,6 +230,14 @@ $(function(){
 $(".plus").click(function(){
     $("#agregarDepto").animate({opacity: '1'},300);
     $("#agregarDepto").css("z-index", "100000");
+
+    $("#agregarDepto form input[name=title]").val('');
+    $("#agregarDepto form select[name=location]").val('');
+    $("#agregarDepto form input[name=area]").val('');
+    $("#agregarDepto form input[name=beds]").val('');
+    $("#agregarDepto form input[name=price]").val('');
+
+    $("#agregarDepto form").attr('action', '/addProperty');
 });
 $(".cerrar").click(function(){
     $("#agregarDepto").animate({opacity: '0'}, 300);
@@ -255,6 +258,7 @@ $(".fotoUsuario").click(function(){
     $(".retorno").stop().delay(300).animate({left:"73%"},200);
 });
 $(".info").click(function(){
+    $(".info").children("span").css("opacity", "0");
     $(".panelInfo").animate({right: '0'},500);
     clic = clic + 100;
     $(".panelInfo").css("z-index",clic);
@@ -332,7 +336,7 @@ function searchAgain() {
 $('#formBuscar').submit(function search(event){
     event.preventDefault();
     if($(".buscar").val() == "") {return;}
-    $(".downPanel").animate({opacity:"0"},);
+    $(".downPanel").fadeOut();
     $('.seccionPrincipalArticulos').show();
     $('.seccionPrincipalArticulos').children('h2').remove();
     $(".buscar").animate({width:"50px"},500);
@@ -356,15 +360,16 @@ $('#formBuscar').submit(function search(event){
 
             propertiesReviews.forEach(function(propertyReview) {
                 if(propertyReview.property_id == property.id) {
+                    var date = new Date(propertyReview.created_at).toLocaleDateString();
                     users.forEach(function(user){
                         if(user.id == propertyReview.author) {
                             author_avatar = user.avatar;
                             author_name = user.name;
                         }
                     });
-                    if(reviewsIndex <= 9) {
-                        $(".reviewsContainer", ".articleContainer#"+property.id).append('<div class="propReview"><h5>'+author_name+'</h5><div class="reviewMessage"><i>'+propertyReview.message+'</i></div></div>');
-                    }
+                    
+                    $(".reviewsContainer", ".articleContainer#"+property.id).append('<div data-avatar="/storage/'+owner_avatar+'" class="propReview hoverEnlarge"><h5><img src="/storage/'+author_avatar+'">'+author_name+'</h5><em>'+date+'</em><div class="reviewMessage"><i>'+propertyReview.message+'</i></div></div>');
+                    
                 }
             });
         }
@@ -438,7 +443,7 @@ $(document).on("click", ".pestana", function(event) {
 
         delete searchedProperties[className];
         if(Object.keys(searchedProperties).length == 0) {
-            $(".downPanel").delay(500).animate({opacity:"1"});
+            $(".downPanel").delay(200).fadeIn();
         }
         
         return;
@@ -563,23 +568,32 @@ $(document).on("click",".articulosPrincipales", function (event) {
                 $("#myFavorites").contents().filter(function(){return this.nodeType === 3;}).remove();
                 $(".favoritos").children("span").css("opacity", "1");
                 $(".favoritos").children("span").animate({fontSize: "16px"});
-                $("#addFavorites").show();
                 $background = $(this).css('background-image');
 
-                $("#addFavorites").prepend("<input id='"+thisID+"' type='text' name='id[]' value='"+thisID+"' style='display:none'></input>");
-                $("#myFavorites").prepend("<article id='"+thisID+"' style='background: white; opacity: 0.5;' class='articulosFavoritos favOpac'><img class='flecha flechaIzq' src='/img/light_mode/arrow2.png' alt=''><img class='flecha flechaDer' src='/img/light_mode/arrow2.png' alt=''><p class='infoFavoritos'>"+""+"</p></article>");
+                properties.forEach(function(property) {
+                    if(property.id == thisID) {
+                        $("#myFavorites").prepend('<article id="'+property.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="closeFav"> &#215;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong></p></article>');
+                    }
+                });
                 favoritesAmount++;
+
+                $.post('/addFavorites', {
+                    'id': thisID
+                }, refreshFavorites);
                 break;
 
             case 2:
                 $(this).children(".favorito").attr("src", "/img/light_mode/heart2.png");
 
-                $("#addFavorites").children("input#"+thisID).remove();
                 $("#myFavorites").children("article#"+thisID).remove();
                 
                 favoritesAmount = favoritesAmount - 1;
+
+                $.post('/removeFavorites', {
+                    'id': thisID
+                }, refreshFavorites);
+
                 if(favoritesAmount == 0){
-                    $("#addFavorites").hide();
                     $(".favoritos").children("span").css("opacity", "0");
                 }
                 break;
@@ -639,13 +653,37 @@ $(document).on("click",".articulosPrincipales", function (event) {
         $(this).data('iteration',iteration);
 });
 
+$(document).on("click", ".propReview", function() {
+    var iteration=$(this).data('iteration')||1
+        switch ( iteration) {
+            case 1:
+                $(this).parent().children(".propReview").animate({opacity: 0}).animate({width: '0px', padding: '0px', margin: '0px'});
+                $(this).animate({height: '85%', width: '95%', padding: '10px', margin: '5px'}).animate({opacity: 1});
+                $(this).removeClass('hoverEnlarge');
+
+                
+                break;
+
+            case 2:
+                $(this).animate({opacity: 0}, 'fast').animate({height: '26%', width: '30%'}, 100);
+                $(this).parent().children(".propReview").animate({margin: '5px'}).delay(400).animate({width: '30%', padding: '5px', margin: '5px'},'fast').animate({opacity: 1});
+                $(this).addClass('hoverEnlarge');
+
+                
+                break;
+        }
+        iteration++;
+        if (iteration>2) iteration=1
+        $(this).data('iteration',iteration);
+});
+
 var myPropertiesIndex = 0;
 var myFavoritesIndex = 0;
 var quick = 0;
 
 properties.forEach(function(property) {
     if(property.owner == userID) {
-        $("#myProperties").prepend('<article id="'+property.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editPropTab">&#9998;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+'</p></article>');
+        $("#myProperties").prepend('<article id="'+property.id+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span data-id="'+property.id+'" style="display: none;" class="editPropTab">&#9998;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><p class="infoFavoritos">'+property.title+'</p></article>');
         myPropertiesIndex++;
     }
     myFavorites.forEach(function(myFavorite) {
@@ -659,7 +697,7 @@ properties.forEach(function(property) {
             var days = Math.round((myBooking.date_out-myBooking.date_in)/60/60/24);
             var date = new Date(myBooking.date_in*1000).toLocaleDateString();
             quick++;
-            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><div class="quickMessenger"><form data-send="booking'+myBooking.id+'" class="quickMessengerForm" action="/sendMessage" method="POST"><input name="recipient" type="hidden" value='+property.owner+'><textarea name="message" rows="8" cols="30" class="quickMessengerText" placeholder="'+ecrire+'"></textarea></form></div><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br>'+pour+' '+days+' '+jour+'s <i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
+            $("#myBookings").prepend('<article id="booking'+myBooking.id+'" data-id="'+property.id+'" data-datein="'+myBooking.date_in+'" data-dateout="'+myBooking.date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><div class="quickMessenger"><form data-send="booking'+myBooking.id+'" class="quickMessengerForm" action="/sendMessage" method="POST"><input class="quickMessengerRecipient" name="recipient" type="hidden" value='+property.owner+'><textarea name="message" rows="8" cols="30" class="quickMessengerText" placeholder="'+ecrire+'"></textarea></form></div><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*myBooking.price)+' '+symbol+'</strong><br><span id="howManyDays">'+pour+' '+days+' '+jour+'s </span><i style="color: grey;"> '+a_partir_du+' '+date+'</i></p></article>');
             if(myLastBooking != null) {
                 if(myBooking.property_id == myLastBooking.property_id) {
                     $("#downTile1").addClass("nextBookingOk");
@@ -695,27 +733,18 @@ if(myNextBooking == null && myLastBooking == null) {
 }
 
 var usersContact = [];
+var unreadMessages = 0;
 
-myMessages.forEach(function(message) {
-    users.forEach(function(user) {
-        if(user.id == message.author && jQuery.inArray(user, usersContact) < 0) {
-            usersContact.push(user);
-        }
-    });
-});
+function refreshMessenger() {
+    $("#regularMessage.activeMessenger").val('');
+    $(".messagesContainer").load('/messengerInside');
+}
+function refreshFavorites() {
+    console.log("POST ejecutado");
+}
 
-usersContact.forEach(function(user) {
-    $('#panelInfo').prepend('<article id="author'+user.id+'" class="regularMessenger"><h5 class="aceptar">'+user.name+'</h5><p class="messagesContainer"></p></article>');
-    myMessages.forEach(function(message) {
-        if(message.author == user.id && message.author != userID) {
-            $('#author'+user.id+' .messagesContainer').append('<p class="messageBubble">'+message.message+'</p>');
-        } else if (message.author == user.id && message.author == userID) {
-            $('#author'+user.id+' .messagesContainer').append('<p class="myMessageBubble">'+message.message+'</p>');
-        }
-    });
-    $('#author'+user.id).append('<form action="/sendMessage" method="POST"><input type="hidden" name="recipient" value="'+user.id+'"><textarea name="message"></textarea><input type="submit" class="aceptar" value="'+envoyer+'"></form>');
-});
-$('#panelInfo').prepend('<h2 class="myMessagesH2">'+mesMessages+'</h2>');
+$('.generalMessenger').load('/messenger');
+setInterval(refreshMessenger, 4000);
 
 $(document).on("click", ".regularMessenger h5", function() {
     var iteration=$(this).data('iteration')||1
@@ -731,7 +760,19 @@ $(document).on("click", ".regularMessenger h5", function() {
         iteration++;
         if (iteration>2) iteration=1
         $(this).data('iteration',iteration)
-})
+});
+
+$(document).on("submit", ".regularMessengerForm", function(event) {
+    event.preventDefault();
+    var message = $("#regularMessage", this).val();
+    var recipient = $("#regularRecipient", this).val();
+    $("#regularMessage", this).addClass('activeMessenger');
+
+    $.post('/sendMessage', {
+        'recipient': recipient,
+        'message': message
+    }, refreshMessenger);
+});
 
 function cuadrado (){
     var width = $('.articulosFavoritos').outerWidth();
@@ -762,116 +803,195 @@ $("#theme").change(function(){
     $("formTheme").submit();
 });
 
+$(document).on("submit", "#editBooking", function(event) {
+
+    event.preventDefault();
+    
+    var action = $(this).attr('action');
+    var date_in = dateIn.dateSelected.toString().split(' ').slice(0,4).join(' ');
+    var date_out = dateOut.dateSelected.toString().split(' ').slice(0,4).join(' ');
+    var booking_id = $('input[name=bookingId]', this).val();
+    var booked_property_id = $('input[name=id]', this).val();
+    var price = $("#firstDate").text().replace(/\D/g,'');
+
+    $.post(action, {
+        'dateIn': date_in,
+        'dateOut': date_out,
+        'bookingId': booking_id,
+        'id': booked_property_id,
+        'price': price
+    }, refreshFavorites);
+
+    $(".cerrar").trigger("click");
+
+    var parsed_date_in = Date.parse(date_in)/1000;
+    var parsed_date_out = Date.parse(date_out)/1000;
+
+    var days = Math.round((parsed_date_out-parsed_date_in)/60/60/24);
+    var date = new Date(parsed_date_in*1000).toLocaleDateString();
+
+    if(action == '/bookProperty') {
+        $(".favoritos").children("span").css("opacity", "1");
+        $(".favoritos").children("span").animate({fontSize: "16px"});
+
+        properties.forEach(function(property) {
+            if(property.id == booked_property_id) {
+                $("#myBookings").prepend('<article id="booking'+booking_id+'" data-id="'+property.id+'" data-datein="'+date_in+'" data-dateout="'+date_out+'" class="articulosFavoritos favOpac" style="background-image:url(\'/storage/'+property.main_picture+'\');"><span style="display: none;" class="editBookingTab">&#9998;</span><span style="display: none;" class="messageIcon">&#9993;</span><img class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt=""><img class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt=""><div class="quickMessenger"><form data-send="booking'+booking_id+'" class="quickMessengerForm" action="/sendMessage" method="POST"><input class="quickMessengerRecipient" name="recipient" type="hidden" value='+property.owner+'><textarea name="message" rows="8" cols="30" class="quickMessengerText" placeholder="'+ecrire+'"></textarea></form></div><p class="infoFavoritos">'+property.title+' <br><strong>'+Math.round(multiplier*price)+' '+symbol+'</strong><br><span id="howManyDays">'+pour+' '+days+' '+jour+'s </span><i style="color: grey;">'+a_partir_du+' '+date+'</i></p></article>');
+            }
+        });
+    } else if(action == '/editBooking') {
+        $("#booking"+booking_id+" strong").html(Math.round(multiplier*price)+' '+symbol);
+        $("#booking"+booking_id+" span#howManyDays").html(pour+' '+days+' '+jour+'s ');
+        $("#booking"+booking_id+" i").html(' '+a_partir_du+' '+date);
+    }
+});
+
 var width = $('.articulosFavoritos').outerWidth();
-$(function(){
-    $('.articulosFavoritos').click(function(event){
-        var target = $(event.target);
-        removed_fav_id = $(this).attr('id').replace(/\D/g,'');
-        var thisID = $(this).attr('data-id');
-        var uniqueID = $(this).attr('id');
 
-        if(target.attr('class') == 'closeFav') {
-            $("#removeFavForm").animate({opacity: '1'},300);
-            $("#removeFavForm").css("z-index", "100000");
-            $("#removeFavFormChild").append('<input type="hidden" name="id" value="'+removed_fav_id+'"></input>');
+$(document).on("click", ".articulosFavoritos", function(event) {
+    var target = $(event.target);
+    removed_fav_id = $(this).attr('id').replace(/\D/g,'');
+    var thisID = $(this).attr('data-id');
+    var uniqueID = $(this).attr('id');
 
-            return;
-        }
+    if(target.attr('class') == 'closeFav') {
+        $("#myFavorites").children("article#"+removed_fav_id).remove();
+        $.post('/removeFavorites', {
+            'id': removed_fav_id
+        }, refreshFavorites);
+       
+        return;
+    }
 
-        if(target.attr('class') == 'editBookingTab') {
-            dateIn.setDate(new Date($(this).attr('data-datein')*1000), true);
-            dateOut.setDate(new Date($(this).attr('data-dateout')*1000), true);
-            $("#bookPropForm .opt1").css("display", "none");
-            $("#bookPropForm .opt2").css("display", "block");
-            $("#cancelBooking").show();
-            $("#bookPropForm").animate({opacity: '1'},500);
-            $("#bookPropForm").css("z-index", "100000");
-            $("#bookPropForm form#editBooking").attr("action", "/editBooking");
-            $("#bookPropForm form").append("<input name='bookingId' value='"+removed_fav_id+"' style='display:none'></input>");
+    if(target.attr('class') == 'editBookingTab') {
+        dateIn.setDate(new Date($(this).attr('data-datein')*1000), true);
+        dateOut.setDate(new Date($(this).attr('data-dateout')*1000), true);
+        $("#bookPropForm .opt1").css("display", "none");
+        $("#bookPropForm .opt2").css("display", "block");
+        $("#cancelBooking").show();
+        $("#bookPropForm").animate({opacity: '1'},500);
+        $("#bookPropForm").css("z-index", "100000");
+        $("#bookPropForm form#editBooking").attr("action", "/editBooking");
+        $("#bookPropForm form").append("<input name='bookingId' value='"+removed_fav_id+"' style='display:none'></input>");
 
-            properties.forEach(function(property) {
-                if(property.id == thisID) {
-                    booked_property = property;
-                }
-            });
+        properties.forEach(function(property) {
+            if(property.id == thisID) {
+                booked_property = property;
+            }
+        });
 
-            return booked_property;
-        }
+        $(".qs-squares").trigger("click");
 
-        if(target.attr('class') == 'messageIcon') {
-            $(".messageIcon", this).animate({opacity: 0});
-            $(".editBookingTab", this).animate({opacity: 0});
-            $(".quickMessenger", this).animate({top: '2.5%'});
-            $(this).append('<span id="closeMessenger">&#215;</span><span data-send="'+uniqueID+'" id="sendQuickMessageLabel">'+envoyer+'</span>');
-            $("#closeMessenger", this).animate({opacity: 1});
-            $("#sendQuickMessageLabel", this).animate({opacity: 1});
+        return booked_property;
+    }
 
-            return;
-        }
+    if(target.attr('class') == 'messageIcon') {
+        $(".messageIcon", this).animate({opacity: 0});
+        $(".editBookingTab", this).animate({opacity: 0});
+        $(".quickMessenger", this).animate({top: '2.5%'});
+        $(this).append('<span id="closeMessenger">&#215;</span><span data-send="'+uniqueID+'" id="sendQuickMessageLabel">'+envoyer+'</span>');
+        $("#closeMessenger", this).animate({opacity: 1});
+        $("#sendQuickMessageLabel", this).animate({opacity: 1});
 
-        if(target.attr('class') == 'quickMessengerText') {
-            return;
-        }
+        return;
+    }
 
-        if(target.attr('id') == 'closeMessenger') {
-            $(".quickMessenger", this).animate({top: '-22.5%'});
-            $("#closeMessenger", this).animate({opacity: 0});
-            $("#sendQuickMessageLabel", this).animate({opacity: 0});
-            $(".messageIcon", this).animate({opacity: 1});
-            $(".editBookingTab", this).animate({opacity: 1});
+    if(target.attr('class') == 'quickMessengerText') {
+        return;
+    }
 
-            return;
-        }
+    if(target.attr('id') == 'closeMessenger') {
+        $(".quickMessenger", this).animate({top: '-22.5%'});
+        $("#closeMessenger", this).animate({opacity: 0});
+        $("#sendQuickMessageLabel", this).animate({opacity: 0});
+        $(".messageIcon", this).animate({opacity: 1});
+        $(".editBookingTab", this).animate({opacity: 1});
 
-        if(target.attr('id') == 'sendQuickMessageLabel') {
-            var uniqueID = $(this).attr('id');
-            $(".quickMessengerForm[data-send='"+uniqueID+"']").submit();
+        return;
+    }
 
-            return;
-        }
+    if(target.attr('id') == 'sendQuickMessageLabel') {
+        var recipient = $(".quickMessengerRecipient", this).val();
+        var message = $(".quickMessengerText", this).val();
+        
+        $.post('/sendMessage', {
+            'recipient': recipient,
+            'message': message
+        }, refreshFavorites);
 
-        var iteration=$(this).data('iteration')||1
-        switch ( iteration) {
-            case 1:
-                $(this).animate({width: "96%", height: 3*width});
+        $(".quickMessenger", this).animate({top: '-22.5%'});
+        $("#closeMessenger", this).animate({opacity: 0});
+        $("#sendQuickMessageLabel", this).animate({opacity: 0});
+        $(".messageIcon", this).animate({opacity: 1});
+        $(".editBookingTab", this).animate({opacity: 1});
 
-                $(this).animate({
-                    borderTopLeftRadius: 0, 
-                    borderTopRightRadius: 0, 
-                    borderBottomLeftRadius: 0, 
-                    borderBottomRightRadius: 0}, { duration: 500, queue: false });
-                
-                $(".flecha", this).css("display", "inline-block");
-                $("p", this).css("display", "block");
-                $("p", this).animate({opacity: 1});
-                $("span", this).css("display", "inline-block");
-                $(this).removeClass('favOpac');
-                $(".quickMessenger", this).css("opacity", "1");
-                triggered = 1;
-                break;
+        $(".quickMessengerText", this).val('');
 
-            case 2:
-                $(this).animate({width: "30%", height: width});
+        return;
+    }
 
-                $(this).animate({
-                    borderTopLeftRadius: '50%', 
-                    borderTopRightRadius: '50%', 
-                    borderBottomLeftRadius: '50%', 
-                    borderBottomRightRadius: '50%'}, { duration: 500, queue: false });
-                
-                $(".flecha", this).css("display", "none");
-                $("p", this).css("display", "none");
-                $("p", this).delay(500).animate({opacity: 0});
-                $("span", this).css("display", "none");
-                $(this).addClass('favOpac');
-                $(".quickMessenger", this).animate({opacity: 0});
-                triggered = 0;
-                break;
-        }
-        iteration++;
-        if (iteration>2) iteration=1
-        $(this).data('iteration',iteration)
-    })
+    if(target.attr('class') == 'editPropTab') {
+        var property_id = $(this).attr('id');
+
+        properties.forEach(function(property) {
+            if(property.id == property_id) {
+                $("#agregarDepto form input[name=title]").val(property.title);
+                $("#agregarDepto form select[name=location]").val(property.location);
+                $("#agregarDepto form input[name=area]").val(property.area);
+                $("#agregarDepto form input[name=beds]").val(property.beds);
+                $("#agregarDepto form input[name=price]").val(property.price);
+            }
+        });
+
+        $("#agregarDepto").animate({opacity: '1'},300);
+        $("#agregarDepto").css("z-index", "100000");
+        $("#agregarDepto form").append('<input type="hidden" name="id" value="'+property_id+'">');
+        $("#agregarDepto form").attr('action', '/editProperty');
+
+        return;
+    }
+
+    var iteration=$(this).data('iteration')||1
+    switch ( iteration) {
+        case 1:
+            $(this).animate({width: "96%", height: 3*width});
+
+            $(this).animate({
+                borderTopLeftRadius: 0, 
+                borderTopRightRadius: 0, 
+                borderBottomLeftRadius: 0, 
+                borderBottomRightRadius: 0}, { duration: 500, queue: false });
+            
+            $(".flecha", this).css("display", "inline-block");
+            $("p", this).css("display", "block");
+            $("p", this).animate({opacity: 1});
+            $("span", this).css("display", "inline-block");
+            $(this).removeClass('favOpac');
+            $(".quickMessenger", this).css("opacity", "1");
+            triggered = 1;
+            break;
+
+        case 2:
+            $(this).animate({width: "30%", height: width});
+
+            $(this).animate({
+                borderTopLeftRadius: '50%', 
+                borderTopRightRadius: '50%', 
+                borderBottomLeftRadius: '50%', 
+                borderBottomRightRadius: '50%'}, { duration: 500, queue: false });
+            
+            $(".flecha", this).css("display", "none");
+            $("p", this).css("display", "none");
+            $("p", this).delay(500).animate({opacity: 0});
+            $("span", this).css("display", "none");
+            $(this).addClass('favOpac');
+            $(".quickMessenger", this).animate({opacity: 0});
+            triggered = 0;
+            break;
+    }
+    iteration++;
+    if (iteration>2) iteration=1
+    $(this).data('iteration',iteration)
 });
 
 $(document).on("click", "#eliminateFavNo", function(event) {
@@ -936,7 +1056,6 @@ $(function(){
 $(document).on("click",".qs-squares", function () {
     var date1 = Date.parse(dateIn.dateSelected)/1000/60/60/24;
     var date2 = Date.parse(dateOut.dateSelected)/1000/60/60/24;
-    console.log(booked_property);
     var range = date2 - date1;
     if(!isNaN(range)) {
         $('#firstDate').css('opacity', 1);
@@ -1067,3 +1186,13 @@ $.fn.digits = function(){
         $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") ); 
     })
 }
+
+function capitalize_Words(str)
+{
+ return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+$(window).load(function() {
+    countrySelect();
+    $(".mapa").load("/map");
+});
