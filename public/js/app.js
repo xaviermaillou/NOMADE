@@ -182,6 +182,7 @@ $(".activarMapa").click(function(){
 
 $(document).ready(function(){
     $('.articulosPrincipales').click(function(){
+
         var iteration=$(this).data('iteration')||1
         switch ( iteration) {
             case 1:
@@ -319,6 +320,7 @@ $(document).on("click", ".closeReview", function() {
 });
 
 var searchedProperties = {};
+var markers = [];
 
 $(document).on("click", ".allerIci", function() {
     $(".buscar").val($(this).attr('id').toUpperCase());
@@ -372,6 +374,15 @@ $('#formBuscar').submit(function search(event){
                     
                 }
             });
+            
+            var lon = property.longitude;
+            var lat = property.latitude;
+            var target = [lon,lat];
+            var marker = new mapboxgl.Marker({
+                color: color,
+              }).setLngLat(target).addTo(map);
+              marker._element.id = property.id;
+            markers.push(marker);
         }
     });
 
@@ -636,6 +647,8 @@ $(document).on("click",".articulosPrincipales", function (event) {
                 $(".favorito", this).css("opacity", "1");
                 $(".flecha", this).css("display", "inline-block");
                 $(".ownerName", this).fadeIn();
+                $('.mapboxgl-marker').css('opacity', 0.66);
+                $('#'+thisID+'.mapboxgl-marker').css('opacity', 1);
                 break;
 
             case 2:
@@ -646,6 +659,7 @@ $(document).on("click",".articulosPrincipales", function (event) {
                 $(".flecha", this).css("display", "none");
                 $(".ownerName", this).fadeOut();
                 $(".infoCompleta", this).animate({left: '-100%'});
+                $('.mapboxgl-marker').css('opacity', 0.66);
                 break;
         }
         iteration++;
@@ -1191,6 +1205,36 @@ function capitalize_Words(str)
 {
  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        $("#sendAvatar").css("width", "100%");
+        $("#sendAvatar").animate({opacity: 1});
+        $("#avatarPreview").animate({opacity: 1, right: '20px'});
+
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#avatarPreview').css('background-image', 'url("'+e.target.result+'")');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+var actualLocation = "lune";
+var newLocation = "soleil";
+var position = $(window).scrollTop(); 
+
+
+$(document).on('click', '.mapboxgl-marker', function() {
+    $('.mapboxgl-marker').css('opacity', 0.66);
+    $(this).css('opacity', 1);
+    var ID = $(this).attr('id');
+    $('html, body').animate({scrollTop: $('article#'+ID+'.articulosPrincipales').offset().top-175});
+    if($('article#'+ID+'.articulosPrincipales').data('iteration') != 2) {
+        $('article#'+ID+'.articulosPrincipales').trigger('click');
+    }
+});
 
 $(window).load(function() {
     countrySelect();

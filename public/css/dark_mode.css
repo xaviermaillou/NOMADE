@@ -60,6 +60,9 @@ nav.filtros{
 .propReview {
     background: black;
 }
+#reviewSection {
+    background: black;
+}
 #middleColumn {
     border-left: 1px solid rgb(75, 75, 75);
     border-right: 1px solid rgb(75, 75, 75);

@@ -67,8 +67,8 @@
 
     // MAPA
 
-    if(theme == "claro") {style = 'mapbox://styles/julabrego/ck16ub24v3jd71cmxyiya7w1t';}
-    else if(theme == "oscuro") {style = 'mapbox://styles/julabrego/ck16vetx60bp31cp4g97hmsq6';}
+    if(theme == "claro") {style = 'mapbox://styles/julabrego/ck16ub24v3jd71cmxyiya7w1t'; color = 'black'}
+    else if(theme == "oscuro") {style = 'mapbox://styles/julabrego/ck16vetx60bp31cp4g97hmsq6'; color = 'white'}
 
     mapboxgl.accessToken = 'pk.eyJ1IjoianVsYWJyZWdvIiwiYSI6ImNrMTVtZDM0ejB3aGwzY256cmtia2txbG0ifQ.RozygX8rIQZaI2IlJxBuZA';
     var map = new mapboxgl.Map({
@@ -125,8 +125,8 @@
       $(document).on('submit', '#formBuscar', function() {
 
         if($busqueda == "ushuaia") {
-        var lon = -68.3;
-        var lat = -54.8;
+        var lon = -68.335150;
+        var lat = -54.822288;
         }
         if($busqueda == "bariloche") {
         var lon = -71.308525;
@@ -150,7 +150,39 @@
         }
         
         worldFly(lon, lat);
-      })
-
+      });
+      $(window).scroll(function() {
+        var scroll = $(window).scrollTop();
+        if(scroll > position) {
+          if($(".pestana").length) {
+            $(".pestana").each(function(i) {
+              if(this.getBoundingClientRect().top < 200) {
+                newLocation = $(this).attr('id');
+              }
+            });
+          }
+          if(actualLocation != newLocation) {
+            actualLocation = newLocation;
+            $busqueda = actualLocation;
+            console.log($busqueda);
+            $('#formBuscar').trigger('submit');
+          }
+        } else {
+          if($(".pestana").length) {
+            $(".pestana").each(function(i) {
+              if(this.getBoundingClientRect().top < 550) {
+                newLocation = $(this).attr('id');
+              }
+            });
+          }
+          if(actualLocation != newLocation) {
+            actualLocation = newLocation;
+            $busqueda = actualLocation;
+            console.log($busqueda);
+            $('#formBuscar').trigger('submit');
+          }
+        }
+        position = scroll;
+        });
     });
 </script>

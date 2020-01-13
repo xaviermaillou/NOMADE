@@ -315,10 +315,11 @@ if(Auth::check()) {
             <form action="/uploadAvatar" method="POST" enctype="multipart/form-data">
             @csrf
                 <label for="foto" class="file formLogin"><?=$choisirPhoto?></label>
-                <input type="file" id="foto" class="file" name="avatar">
+                <input type="file" id="foto" class="file" name="avatar" onchange="readURL(this);">
                 <label for="subir" class="file formLogin" id="sendAvatar"><?=$envoyer?></label>
                 <input type="submit" id="subir" class="subir" value="Subir" class="aceptar">
             </form>
+            <div id="avatarPreview"></div>
 
             <!-- MONEDA -->
 

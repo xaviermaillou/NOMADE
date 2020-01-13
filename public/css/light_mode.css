@@ -62,6 +62,9 @@ nav.filtros{
     box-shadow: 1px 1px 3px lightgray;
     -webkit-box-shadow: 1px 1px 3px lightgray;
 }
+#reviewSection {
+    background: white;
+}
 #middleColumn {
     border-left: 1px solid rgb(200, 200, 200);
     border-right: 1px solid rgb(200, 200, 200);
