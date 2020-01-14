@@ -53,6 +53,8 @@ if(language == "es") {
 
     var mesMessages = "MIS MENSAJES";
 
+    var ilyaDesReserves = "Hay una o varias reservas entre esas fechas";
+
 } else if (language == "fr") {
     var personnes = "personne(s)" ;
     var jour = "jour";
@@ -105,6 +107,8 @@ if(language == "es") {
 
     var mesMessages = "MES MESSAGES";
 
+    var ilyaDesReserves = "Il y a une ou des réserves pour ces dates";
+
 } else if (language == "en") {
     var personnes = "people" ;
     var jour = "day";
@@ -156,24 +160,34 @@ if(language == "es") {
     var commentaires = "WHAT OTHER USERS COMMENTED";
 
     var mesMessages = "MY MESSAGES";
+
+    var ilyaDesReserves = "There is one or several bookings between those dates";
 }
 
-const dateIn = datepicker("#dateIn", { 
-    id: 1, 
-    alwaysShow: true, 
-    customDays: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi], 
-    customMonths: [janvier, fevrier, mars, avril, mai, juin, juillet, aout, septembre, octobre, novembre, decembre],
-    disableYearOverlay: true,
-    showAllDates: true
-});
-const dateOut = datepicker("#dateOut", { 
-    id: 1, 
-    alwaysShow: true, 
-    customDays: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi], 
-    customMonths: [janvier, fevrier, mars, avril, mai, juin, juillet, aout, septembre, octobre, novembre, decembre],
-    disableYearOverlay: true,
-    showAllDates: true
-});
+dateIn = datepicker("#dateIn", {id:1});
+dateOut = datepicker("#dateOut", {id:1});
+
+function loadCalendar() {
+    dateIn.remove();
+    dateOut.remove();
+
+    dateIn = datepicker("#dateIn", { 
+        id: 1, 
+        alwaysShow: true, 
+        customDays: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi], 
+        customMonths: [janvier, fevrier, mars, avril, mai, juin, juillet, aout, septembre, octobre, novembre, decembre],
+        disableYearOverlay: true,
+        disabledDates: bookedDates
+    });
+    dateOut = datepicker("#dateOut", { 
+        id: 1, 
+        alwaysShow: true, 
+        customDays: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi], 
+        customMonths: [janvier, fevrier, mars, avril, mai, juin, juillet, aout, septembre, octobre, novembre, decembre],
+        disableYearOverlay: true,
+        disabledDates: bookedDates
+    });
+}
 
 $(".activarMapa").click(function(){
     $(".mapa").css("background", "none");
@@ -339,6 +353,7 @@ $('#formBuscar').submit(function search(event){
     event.preventDefault();
     if($(".buscar").val() == "") {return;}
     $(".downPanel").fadeOut();
+    $('html, body').animate({scrollTop: 0});
     $('.seccionPrincipalArticulos').show();
     $('.seccionPrincipalArticulos').children('h2').remove();
     $(".buscar").animate({width:"50px"},500);
@@ -355,7 +370,7 @@ $('#formBuscar').submit(function search(event){
                     owner_name = user.name;
                 }
             });
-            $('.seccionPrincipalArticulos').prepend('<div id="'+property.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+property.id+'" data-picture="'+property.main_picture+'" class="articulosPrincipales '+multiplier*property.price+'price '+property.area+'area '+property.beds+'beds '+property.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+property.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+property.title+'</p><p class="infoCompleta" style="opacity: 0">'+property.area+' m<sup>2</sup> | '+property.beds+' '+personnes+' | <strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+property.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"><span id="slideRight">^</span></div></div><div class="propComments"><h5>'+commentaires+'</h5><div class="leftTab"><span id="slideLeft">^</span></div><section class="reviewsContainer"></section></div></div></div></article></div>')
+            $('.seccionPrincipalArticulos').prepend('<div id="'+property.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+property.id+'" data-picture="'+property.main_picture+'" class="articulosPrincipales '+multiplier*property.price+'price '+property.area+'area '+property.beds+'beds '+property.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+property.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+property.title+'</p><p class="infoCompleta" style="opacity: 0">'+property.area+' m<sup>2</sup> | '+property.beds+' '+personnes+' | <strong>'+Math.round(multiplier*property.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span class="'+property.id+'" id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+property.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"><span id="slideRight">^</span></div></div><div class="propComments"><h5>'+commentaires+'</h5><div class="leftTab"><span id="slideLeft">^</span></div><section class="reviewsContainer"></section></div></div></div></article></div>')
             sameLocationProperties.push(property);
 
             var reviewsIndex = 0;
@@ -406,6 +421,7 @@ function filter() {
 
     function doneTyping () {
         $('.seccionPrincipalArticulos').empty();
+        $('.mapboxgl-marker').hide();
 
         var e = 0;
         var k = 0;
@@ -415,9 +431,39 @@ function filter() {
             k++;
             sameLocationProperties.forEach(function(filteredProperty) {
                 if(filteredProperty.area >= area && filteredProperty.price <= price && (beds == "N" || beds == filteredProperty.beds)) {
-                    $('.seccionPrincipalArticulos').prepend('<div id="'+filteredProperty.id+'" class="articleContainer" style="margin: 0; padding: 0; border: none; background-color: rgba(125,125,125,0.8);"><article id="'+filteredProperty.id+'" data-picture="'+filteredProperty.main_picture+'" class="articulosPrincipales '+multiplier*filteredProperty.price+'price '+filteredProperty.area+'area '+filteredProperty.beds+'beds '+filteredProperty.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+filteredProperty.main_picture+'\'); height: 200px; border: none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+filteredProperty.title+'</p><p class="infoCompleta" style="opacity: 0">'+filteredProperty.area+' m<sup>2</sup> | '+filteredProperty.beds+' '+personnes+' | <strong>'+Math.round(multiplier*filteredProperty.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+filteredProperty.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"><span id="slideRight">^</span></div></div><div class="propComments"><h5>'+commentaires+'</h5><div class="leftTab"><span id="slideLeft">^</span></div></div></div></div></article></div>')
+                    users.forEach(function(user){
+                        if(user.id == filteredProperty.owner) {
+                            owner_avatar = user.avatar;
+                            owner_name = user.name;
+                        }
+                    });
+
+                    $('.seccionPrincipalArticulos').prepend('<div id="'+filteredProperty.id+'" class="articleContainer" style="margin: 0; padding: 0; border: noneM background-color: rgba(125,125,125,0.8);"><article id="'+filteredProperty.id+'" data-picture="'+filteredProperty.main_picture+'" class="articulosPrincipales '+multiplier*filteredProperty.price+'price '+filteredProperty.area+'area '+filteredProperty.beds+'beds '+filteredProperty.location.split(' ').join('_')+'" style="background-image: url(\'/storage/'+filteredProperty.main_picture+'\'); height: 200px; border:none;"><img id="favorito" class="favorito" src="/img/light_mode/heart2.png" alt="" style="opacity: 0"><img id="flechaIzq" class="flecha flechaIzq" src="/img/light_mode/arrow2.png" alt="" style="display: none"><img id="flechaDer" class="flecha flechaDer" src="/img/light_mode/arrow2.png" alt="" style="display: none"><p class="infoPrevia" style="opacity: 1">'+filteredProperty.title+'</p><p class="infoCompleta" style="opacity: 0">'+filteredProperty.area+' m<sup>2</sup> | '+filteredProperty.beds+' '+personnes+' | <strong>'+Math.round(multiplier*filteredProperty.price)+' '+symbol+'/'+jour+'</strong><span id="slideUp">^</span><span id="slideDown">^</span><img class="profile" src="/storage/'+owner_avatar+'"><span class="ownerName">'+owner_name+'</span><span id="bookButton">'+reserver+'</span></p><div class="propDetails"><h3 style="opacity: 0;">'+filteredProperty.title+'</h3><div class="propDescription"><div class="propEquipments"><h5>'+details+'</h5><div class="descriptionColumn"></div><div id="middleColumn" class="descriptionColumn"></div><div class="descriptionColumn"></div><div class="rightTab"><span id="slideRight">^</span></div></div><div class="propComments"><h5>'+commentaires+'</h5><div class="leftTab"><span id="slideLeft">^</span></div><section class="reviewsContainer"></section></div></div></div></article></div>')
                     i++;
                     e++;
+
+                    propertiesReviews.forEach(function(propertyReview) {
+                        if(propertyReview.property_id == filteredProperty.id) {
+                            var date = new Date(propertyReview.created_at).toLocaleDateString();
+                            users.forEach(function(user){
+                                if(user.id == propertyReview.author) {
+                                    author_avatar = user.avatar;
+                                    author_name = user.name;
+                                }
+                            });
+                            console.log($(".reviewsContainer", "#"+filteredProperty.id+".articleContainer").attr('class'));
+                            $(".reviewsContainer", "#"+filteredProperty.id+".articleContainer").append('<div data-avatar="/storage/'+owner_avatar+'" class="propReview hoverEnlarge"><h5><img src="/storage/'+author_avatar+'">'+author_name+'</h5><em>'+date+'</em><div class="reviewMessage"><i>'+propertyReview.message+'</i></div></div>');
+                            
+                        }
+                    });
+
+                    var lon = filteredProperty.longitude;
+                    var lat = filteredProperty.latitude;
+                    var target = [lon,lat];
+                    var marker = new mapboxgl.Marker({
+                        color: color,
+                    }).setLngLat(target).addTo(map);
+                    marker._element.id = filteredProperty.id;
                 }
             });
 
@@ -446,6 +492,10 @@ $(document).on("click", ".pestana", function(event) {
     if(target.attr("class") == "closeTab") {
         $(".articulosPrincipales."+className).animate({height:"0px"});
         $(".articulosPrincipales."+className).css("margin-bottom", "0");
+        $(".articulosPrincipales."+className).each(function(i) {
+            var ID = $(this).attr('id');
+            $("#"+ID+".mapboxgl-marker").hide();
+        });
         $(".infoPrevia."+className).animate({opacity: '1'});
         $(".infoCompleta."+className).animate({opacity: '0'});
         $(".favorito."+className).css("opacity", "0");
@@ -509,8 +559,23 @@ $(document).on("click",".articulosPrincipales", function (event) {
 
 
     if(target.attr("id") == "bookButton") {
+
+        bookedDates = [];
+
+        bookings.forEach(function(booking) {
+            if(booking.property_id == thisID) {
+                var date_in = new Date((booking.date_in-75600)*1000);
+                var date_out = new Date((booking.date_out-75600)*1000);
+                var datesArray = getDates(date_in, date_out);
+                bookedDates = bookedDates.concat(datesArray);
+            }
+        }); 
+
+        loadCalendar();
+
         dateIn.setDate();
-        dateOut.setDate();
+        dateOut.setDate(); 
+
         $("#bookPropForm .opt1").css("display", "block");
         $("#bookPropForm .opt2").css("display", "none");
         $("#bookPropForm").animate({opacity: '1'},500);
@@ -1032,50 +1097,32 @@ $(function(){
         $(this).data('iteration',iteration)
     })
 });
-$(function(){
-    $(".escribirComentarioH2").click(function(){
-        var iteration=$(this).data('iteration')||1
-        switch ( iteration) {
-            case 1:
-                $(".escribirComentario").css("display","none");
-                break;
-
-            case 2:
-                $(".escribirComentario").css("display","block");
-                break;
-        }
-        iteration++;
-        if (iteration>2) iteration=1
-        $(this).data('iteration',iteration)
-    })
-});
-$(function(){
-    $(".forumH2").click(function(){
-        var iteration=$(this).data('iteration')||1
-        switch ( iteration) {
-            case 1:
-                $(".forum").css("display","none");
-                break;
-
-            case 2:
-                $(".forum").css("display","block");
-                break;
-        }
-        iteration++;
-        if (iteration>2) iteration=1
-        $(this).data('iteration',iteration)
-    })
-});
 
 $(document).on("click",".qs-squares", function () {
-    var date1 = Date.parse(dateIn.dateSelected)/1000/60/60/24;
-    var date2 = Date.parse(dateOut.dateSelected)/1000/60/60/24;
-    var range = date2 - date1;
-    if(!isNaN(range)) {
-        $('#firstDate').css('opacity', 1);
-        $('#firstDate').html(Math.round(booked_property.price*multiplier*range)+' '+symbol).digits();
-        $("#bookPropForm form").append("<input name='price' value='"+booked_property.price*range+"' style='display:none'></input>");
-    }
+    setTimeout(function() {
+
+        selectedDates = getDates(dateIn.dateSelected, dateOut.dateSelected);
+
+        if(hasCommonElement(selectedDates, bookedDates)) {
+            dateIn.setDate();
+            dateOut.setDate();
+            $('#firstDate').css('opacity', 1);
+            $('#firstDate').html(ilyaDesReserves);
+
+            return;
+        }
+
+        var date1 = Date.parse(dateIn.dateSelected)/1000/60/60/24;
+        var date2 = Date.parse(dateOut.dateSelected)/1000/60/60/24;
+        var range = date2 - date1;
+        if(!isNaN(range)) {
+            $('#firstDate').css('opacity', 1);
+            $('#firstDate').html(Math.round(booked_property.price*multiplier*range)+' '+symbol).digits();
+            $("#bookPropForm form").append("<input name='price' value='"+booked_property.price*range+"' style='display:none'></input>");
+        } else {
+            $('#firstDate').css('opacity', 0);
+        }
+    },100);
 });
 
 $(document).on("submit",".formRegistro", function (event) {
@@ -1235,6 +1282,35 @@ $(document).on('click', '.mapboxgl-marker', function() {
         $('article#'+ID+'.articulosPrincipales').trigger('click');
     }
 });
+
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
+
+function getDates(startDate, stopDate) {
+    var dateArray = new Array();
+    var currentDate = startDate;
+    while (currentDate <= stopDate) {
+        dateArray.push(new Date (currentDate));
+        currentDate = currentDate.addDays(1);
+    }
+    return dateArray;
+}
+
+function hasCommonElement(arr1,arr2)
+{
+    var hasCommon = false;
+    arr1.forEach(function(arr1Element) {
+        arr2.forEach(function(arr2Element) {
+            if(arr2Element.getTime() == arr1Element.getTime()) {
+                hasCommon = true;
+            }
+        });
+    });
+    return hasCommon;
+}
 
 $(window).load(function() {
     countrySelect();

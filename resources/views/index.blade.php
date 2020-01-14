@@ -104,6 +104,7 @@ if(Auth::check()) {
     $properties = Property::all()->toArray();
     $myProperties = Property::where('owner', '=', $userID)->get()->toArray();
     $myFavorites = Favorite::where('user_id', '=', $userID)->where('favorite', '=', 1)->get('property_id')->toArray();
+    $bookings = Favorite::where('booked', '=', 1)->get()->toArray();
     $myBookings = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->get()->toArray();
     $myNextBooking = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->where('date_in', '>', $currentTime)->orderBy('date_in', 'ASC')->first();
     $myLastBooking = Favorite::where('user_id', '=', $userID)->where('booked', '=', 1)->where('date_out', '<', $currentTime)->where('reviewed', '=', 0)->orderBy('date_out', 'DESC')->first();
@@ -437,11 +438,11 @@ if(Auth::check()) {
                 <h1 class="opt2" style="margin-left: 10px; display: none;"><?=$editerReserv?></h1>
                 <form action="/bookProperty" method="POST" id="editBooking">
                 @csrf 
-                    <label for="dateIn" class="file formLogin" style="display: inline-block; border: none; width: 298px; margin-bottom: 0; text-indent: 10px;"><?=$depuis?></label>
-                    <label for="dateOut" class="file formLogin" style="display: inline-block; border: none; width: 298px; margin-bottom: 0; text-indent: 10px;"><?=$jusqua?></label>
+                    <label for="dateIn" class="file formLogin" style="display: inline-block; border: none; width: 298px; margin-bottom: 0; text-indent: 10px; font-size: 18px;"><?=$depuis?></label>
+                    <label for="dateOut" class="file formLogin" style="display: inline-block; border: none; width: 298px; margin-bottom: 0; text-indent: 10px; font-size: 18px;"><?=$jusqua?></label>
                     <input style="display: inline-block; color:transparent; height: 0px;" type="text" name="dateIn" id="dateIn" readonly>
                     <input style="display: inline-block; color:transparent; height: 0px;" type="text" name="dateOut" id="dateOut" readonly>
-                    <p id='firstDate' style='margin-left: 10px; margin-top: 260px; margin-bottom: 10px; opacity: 0; font-size: 20px; font-weight: bolder'>PRECIO</p>
+                    <p id='firstDate' style='margin-left: 10px; margin-top: 240px; margin-bottom: 10px; opacity: 0; font-size: 20px; font-weight: bolder'>PRECIO</p>
                     <input type="submit" value="<?=$reserver?>" class="aceptar" style="margin-left: 10px; width: 120px;">
                 </form>
                 <form action="/removeBooking" style="display: none;" method="POST" id="cancelBooking">
@@ -451,7 +452,7 @@ if(Auth::check()) {
             </section>
         </section>
 
-        <script src="/calendar/dist/datepicker.min.js"></script> 
+        <script src="/calendar/dist/datepicker.min.js"></script>
     </body>
 </html>
 
@@ -461,6 +462,7 @@ if(Auth::check()) {
     var users = <?php echo json_encode($users) ?>;
     var properties = <?php echo json_encode($properties) ?>;
     var myFavorites = <?php echo json_encode($myFavorites) ?>;
+    var bookings = <?php echo json_encode($bookings) ?>;
     var myBookings = <?php echo json_encode($myBookings) ?>;
     var myNextBooking = <?php echo json_encode($myNextBooking) ?>;
     var myLastBooking = <?php echo json_encode($myLastBooking) ?>;
@@ -479,6 +481,8 @@ if(Auth::check()) {
     console.log("Favoritos:");
     console.log(myFavorites);
     console.log("Reservas:");
+    console.log(bookings);
+    console.log("Mis reservas:");
     console.log(myBookings);
     console.log("Próxima reserva:");
     console.log(myNextBooking);

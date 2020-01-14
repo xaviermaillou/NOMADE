@@ -947,7 +947,9 @@ section.formularioEliminar input {
 
 .qs-datepicker-container {
     font-size: 1.196rem !important;
+    top: 40px !important;
     height: 250px;
+    width: 15.635em !important;
     font-family: 'Titillium Web' !important;
     border-radius: 0 !important;
     border: none !important;
@@ -1029,6 +1031,10 @@ section.formularioEliminar input {
 }
 circle {
     display: none;
+}
+
+#paypal-button {
+    margin-left: 10px;
 }
 
 @media (min-width: 700px) {
@@ -1192,6 +1198,5 @@ circle {
     }
     .mapboxgl-marker:hover {
         cursor: pointer;
-        opacity: 1;
     }
 }

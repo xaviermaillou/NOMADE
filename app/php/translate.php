@@ -22,14 +22,14 @@ if($language == "es") {
     $oubli = "Olvidaste tu contraseña?";
 
     $choisirPhoto = "Elegir una foto de perfil";
-    $envoyer = "Enviar";
+    $envoyer = "CONFIRMAR";
     $devise = "Moneda";
     $langue = "Idioma";
     $styleVisuel = "Tema";
     $clair = "Claro";
     $fonce = "Oscuro";
     $pays = "País";
-    $deconexion = "Desconectarse";
+    $deconexion = "DESCONECTARSE";
 
     $questionsFrequentes = "PREGUNTAS FRECUENTES";
     $question1 = "¿Cómo creo una cuenta?";
@@ -110,14 +110,14 @@ if($language == "fr") {
     $oubli = "Vous avez oublié votre mot-de-passe?";
 
     $choisirPhoto = "Choisir une photo de profil";
-    $envoyer = "Envoyer";
+    $envoyer = "CONFIRMER";
     $devise = "Devise";
     $langue = "Langue";
     $styleVisuel = "Thème";
     $clair = "Clair";
     $fonce = "Foncé";
     $pays = "Pays";
-    $deconexion = "Se deconnecter";
+    $deconexion = "SE DÉCONNECTER";
 
     $questionsFrequentes = "QUESTIONS FRÉQUENTES";
     $question1 = "Comment créer un compte ?";
@@ -198,14 +198,14 @@ if($language == "en") {
     $oubli = "Forgot your password?";
 
     $choisirPhoto = "Choose a profile picture";
-    $envoyer = "Send";
+    $envoyer = "CONFIRM";
     $devise = "Currency";
     $langue = "Language";
     $styleVisuel = "Theme";
     $clair = "Light";
     $fonce = "Dark";
     $pays = "Country";
-    $deconexion = "Logout";
+    $deconexion = "LOGOUT";
 
     $questionsFrequentes = "";
     $question1 = "How do I create an account?";

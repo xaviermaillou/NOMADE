@@ -67,8 +67,8 @@
 
     // MAPA
 
-    if(theme == "claro") {style = 'mapbox://styles/julabrego/ck16ub24v3jd71cmxyiya7w1t'; color = 'black'}
-    else if(theme == "oscuro") {style = 'mapbox://styles/julabrego/ck16vetx60bp31cp4g97hmsq6'; color = 'white'}
+    if(theme == "claro") {style = 'mapbox://styles/julabrego/ck16ub24v3jd71cmxyiya7w1t'; color = 'red'}
+    else if(theme == "oscuro") {style = 'mapbox://styles/julabrego/ck16vetx60bp31cp4g97hmsq6'; color = 'yellow'}
 
     mapboxgl.accessToken = 'pk.eyJ1IjoianVsYWJyZWdvIiwiYSI6ImNrMTVtZDM0ejB3aGwzY256cmtia2txbG0ifQ.RozygX8rIQZaI2IlJxBuZA';
     var map = new mapboxgl.Map({
@@ -164,7 +164,6 @@
           if(actualLocation != newLocation) {
             actualLocation = newLocation;
             $busqueda = actualLocation;
-            console.log($busqueda);
             $('#formBuscar').trigger('submit');
           }
         } else {
@@ -178,7 +177,6 @@
           if(actualLocation != newLocation) {
             actualLocation = newLocation;
             $busqueda = actualLocation;
-            console.log($busqueda);
             $('#formBuscar').trigger('submit');
           }
         }
