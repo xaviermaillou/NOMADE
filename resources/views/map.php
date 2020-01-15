@@ -76,7 +76,6 @@
       style: style,
       center: [10,20],
       zoom: 1.3,
-      interactive: false
     });
 
     map.on('load', function() {

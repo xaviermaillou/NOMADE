@@ -344,7 +344,7 @@ $(document).on("click", ".allerIci", function() {
 function searchAgain() {
     var alreadySearched = 1;
     $(".filtros").hide();
-    $(".buscar").animate({width:"500px"},500);
+    $(".buscar").animate({width:"400px"},500);
     $(".buscar").focus();
     return alreadySearched;
 };
@@ -352,6 +352,8 @@ function searchAgain() {
 $('#formBuscar').submit(function search(event){
     event.preventDefault();
     if($(".buscar").val() == "") {return;}
+    $("header h1").fadeOut();
+    $('#formBuscar').animate({top: '20px'});
     $(".downPanel").fadeOut();
     $('html, body').animate({scrollTop: 0});
     $('.seccionPrincipalArticulos').show();
@@ -359,6 +361,7 @@ $('#formBuscar').submit(function search(event){
     $(".buscar").animate({width:"50px"},500);
     $(".filtros").css("display","inline-block");
     $(".filtros").show();
+    $(".mapboxgl-ctrl-geocoder--input").val($('#buscar').val()).parent("form").submit();
     $busqueda = $('#buscar').val().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
     var sameLocationProperties = [];
     

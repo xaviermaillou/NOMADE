@@ -322,6 +322,13 @@ form input.buscar {
     animation-name: trans-x;
     animation-duration: 1s;
 }
+.mapboxgl-ctrl-geocoder--icon {
+    display: none !important;
+}
+.mapboxgl-ctrl-geocoder {
+    box-shadow: none !important;
+    background: none !important;
+}
 form #lupa {
     margin-left: 10px;
     height: 30px;
@@ -1033,8 +1040,8 @@ circle {
     display: none;
 }
 
-#paypal-button {
-    margin-left: 10px;
+.mapboxgl-ctrl-top-right {
+    right: 200px !important;
 }
 
 @media (min-width: 700px) {
